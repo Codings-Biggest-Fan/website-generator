@@ -3,6 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "description": "MVRT.com (FRC Team 115) Visual Website Generator & Maintainer App",
+  "author": "Monta Vista Robotics Team (FRC Team 115)",
   "type": "module",
   "main": "electron/main.cjs",
   "scripts": {
@@ -12,7 +13,61 @@
     "preview": "vite preview",
     "generate-site": "node scripts/generate-site.mjs",
     "electron:dev": "node scripts/electron-dev.mjs",
-    "electron:start": "npm run build && electron ."
+    "electron:start": "npm run build && electron .",
+    "dist:win": "npm run build && electron-builder --win",
+    "dist:mac": "npm run build && electron-builder --mac",
+    "dist:linux": "npm run build && electron-builder --linux",
+    "dist:all": "npm run build && electron-builder -mwl"
+  },
+  "build": {
+    "appId": "com.mvrt115.websitegenerator",
+    "productName": "MVRT Website Generator",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        },
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ]
+    },
+    "mac": {
+      "category": "public.app-category.developer-tools",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": ["arm64", "x64"]
+        },
+        {
+          "target": "zip",
+          "arch": ["arm64", "x64"]
+        }
+      ]
+    },
+    "linux": {
+      "category": "Development",
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": ["x64"]
+        },
+        {
+          "target": "deb",
+          "arch": ["x64"]
+        }
+      ]
+    }
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.0",
@@ -27,6 +82,7 @@
   "devDependencies": {
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "electron": "^45.4.1"
+    "electron": "^45.4.1",
+    "electron-builder": "^26.18.0"
   }
 }

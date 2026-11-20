@@ -4,5 +4,6 @@ import tailwindcss from '@tailwindcss/vite';
 import { mvrtGitBridge } from './server/mvrtGitBridge';
 
 export default defineConfig({
+  base: './',
   plugins: [react(), tailwindcss(), mvrtGitBridge()]
 });

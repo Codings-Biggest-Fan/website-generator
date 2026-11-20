@@ -3,7 +3,8 @@
   "private": true,
   "version": "1.0.0",
   "description": "MVRT.com (FRC Team 115) Visual Website Generator & Maintainer App",
-  "author": "Monta Vista Robotics Team (FRC Team 115)",
+  "author": "Monta Vista Robotics Team <mvrt@mvrt.com>",
+  "homepage": "https://mvrt.com",
   "type": "module",
   "main": "electron/main.cjs",
   "scripts": {
@@ -14,10 +15,10 @@
     "generate-site": "node scripts/generate-site.mjs",
     "electron:dev": "node scripts/electron-dev.mjs",
     "electron:start": "npm run build && electron .",
-    "dist:win": "npm run build && electron-builder --win",
-    "dist:mac": "npm run build && electron-builder --mac",
-    "dist:linux": "npm run build && electron-builder --linux",
-    "dist:all": "npm run build && electron-builder -mwl"
+    "dist:win": "npm run build && electron-builder --win --publish never",
+    "dist:mac": "npm run build && electron-builder --mac --publish never",
+    "dist:linux": "npm run build && electron-builder --linux --publish never",
+    "dist:all": "npm run build && electron-builder -mwl --publish never"
   },
   "build": {
     "appId": "com.mvrt115.websitegenerator",
@@ -57,6 +58,7 @@
     },
     "linux": {
       "category": "Development",
+      "maintainer": "Monta Vista Robotics Team <mvrt@mvrt.com>",
       "target": [
         {
           "target": "AppImage",

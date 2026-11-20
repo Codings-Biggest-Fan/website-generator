@@ -62,6 +62,40 @@ export function mvrtGitBridge(): Plugin {
         res.setHeader('Content-Type', 'application/json');
 
         try {
+          if (req.url === '/api/mvrt/git-credential' && req.method === 'GET') {
+            try {
+              const out = execFileSync('git', ['credential', 'fill'], {
+                input: 'protocol=https\nhost=github.com\n\n',
+                encoding: 'utf8'
+              });
+              const lines = out.split(/\r?\n/);
+              let username = '';
+              let password = '';
+              for (const line of lines) {
+                if (line.startsWith('username=')) username = line.slice(9).trim();
+                if (line.startsWith('password=')) password = line.slice(9).trim();
+              }
+              if (password) {
+                res.end(JSON.stringify({ ok: true, username, token: password }));
+              } else {
+                res.end(
+                  JSON.stringify({
+                    ok: false,
+                    error: 'No stored GitHub credential found.'
+                  })
+                );
+              }
+            } catch (credErr: any) {
+              res.end(
+                JSON.stringify({
+                  ok: false,
+                  error: credErr?.message || String(credErr)
+                })
+              );
+            }
+            return;
+          }
+
           if (req.url === '/api/mvrt/git-status' && req.method === 'GET') {
             const cwd = process.cwd();
             let branch = 'main';

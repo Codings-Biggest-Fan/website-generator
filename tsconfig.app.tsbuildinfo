@@ -1,1 +1,1 @@
-{"root":["./src/main.tsx","./src/components/mvrt/mvrtgeneratorapp.tsx","./src/components/mvrt/mvrtlivesite.tsx","./src/data/mvrtdata.ts","./src/services/mvrtstaticgenerator.ts","./src/services/zipbuilder.ts","./src/types/mvrt.ts"],"version":"5.9.3"}
+{"root":["./src/main.tsx","./src/components/mvrt/mvrtgeneratorapp.tsx","./src/components/mvrt/mvrtlivesite.tsx","./src/data/mvrtdata.ts","./src/services/aiassistant.ts","./src/services/githubsync.ts","./src/services/mvrtstaticgenerator.ts","./src/services/zipbuilder.ts","./src/types/mvrt.ts"],"version":"5.9.3"}

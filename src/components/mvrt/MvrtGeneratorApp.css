@@ -305,3 +305,141 @@
 .mvrt-form-input:focus {
   border-color: #a78bfa;
 }
+
+
+/* ==========================================================================
+   GitHub Account Pill & Floating AI Assistant Popover
+   ========================================================================== */
+
+.mvrt-gh-pill {
+  background: #141820;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: #ecfdf5;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px 4px 5px;
+  border-radius: 999px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.14s ease;
+}
+
+.mvrt-gh-pill:hover {
+  background: #1b2430;
+  border-color: #34d399;
+}
+
+.mvrt-gh-avatar {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.mvrt-ai-popover {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  width: min(410px, 94vw);
+  max-height: 76vh;
+  background: #121216;
+  color: #fafafa;
+  border: 1px solid rgba(167, 139, 250, 0.35);
+  border-radius: 16px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.65);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 1100;
+}
+
+.mvrt-ai-header {
+  padding: 12px 14px;
+  background: #17171d;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.mvrt-ai-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 200px;
+  max-height: 340px;
+}
+
+.mvrt-ai-msg {
+  padding: 9px 12px;
+  border-radius: 10px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  max-width: 92%;
+}
+
+.mvrt-ai-msg.user {
+  align-self: flex-end;
+  background: #662d91;
+  color: #ffffff;
+}
+
+.mvrt-ai-msg.assistant {
+  align-self: flex-start;
+  background: #1c1c23;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #e4e4e7;
+}
+
+.mvrt-ai-chips {
+  padding: 8px 14px;
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.mvrt-ai-chip {
+  background: #1b1b22;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #d4d4d8;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 9px;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.mvrt-ai-chip:hover {
+  background: #662d91;
+  color: #ffffff;
+  border-color: #a78bfa;
+}
+
+.mvrt-ai-input-row {
+  padding: 10px 12px;
+  background: #0e0e12;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  gap: 8px;
+}
+
+.mvrt-task-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 10px;
+  background: #1a1a20;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  font-size: 12.5px;
+}

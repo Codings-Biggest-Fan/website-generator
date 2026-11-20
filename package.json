@@ -11,7 +11,7 @@
     "typecheck": "tsc -b --pretty false",
     "preview": "vite preview",
     "generate-site": "node scripts/generate-site.mjs",
-    "electron:dev": "electron . --dev",
+    "electron:dev": "node scripts/electron-dev.mjs",
     "electron:start": "npm run build && electron ."
   },
   "dependencies": {
@@ -26,6 +26,7 @@
   },
   "devDependencies": {
     "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0"
+    "@types/react-dom": "^19.0.0",
+    "electron": "^45.4.1"
   }
 }

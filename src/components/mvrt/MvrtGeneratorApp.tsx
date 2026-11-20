@@ -724,18 +724,8 @@ export const MvrtGeneratorApp: React.FC = () => {
           )}
         </div>
 
-        {/* Right: AI Assistant + GitHub Login/Auto-Sync + Export .ZIP + Reset */}
+        {/* Right: GitHub Login/Auto-Sync + Export .ZIP + Reset */}
         <div className="mvrt-topbar-group">
-          <button
-            type="button"
-            className={`mvrt-top-btn ${showAiPopover ? 'primary' : ''}`}
-            onClick={() => setShowAiPopover((v) => !v)}
-            title="Open AI Assistant & Tasks"
-          >
-            <Sparkles size={13} color="#c4b5fd" />
-            <span>AI{pendingTaskCount > 0 ? ` (${pendingTaskCount})` : ''}</span>
-          </button>
-
           {ghSession ? (
             <>
               <button

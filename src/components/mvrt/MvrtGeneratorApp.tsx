@@ -330,27 +330,43 @@ export const MvrtGeneratorApp: React.FC = () => {
     try {
       const { username, avatarUrl, repos } =
         await fetchGitHubUserAndRepos(token);
-      setGhRepos(repos);
+      const hasMvrtRepo = repos.some(
+        (r) => r.fullName.toLowerCase() === 'mvrt-115/mvrt-115.github.io'
+      );
+      const mergedRepos: GitHubRepoOption[] = hasMvrtRepo
+        ? repos
+        : [
+            {
+              fullName: 'mvrt-115/mvrt-115.github.io',
+              defaultBranch: 'master',
+              private: false
+            },
+            ...repos
+          ];
+      setGhRepos(mergedRepos);
 
       const defaultRepo =
         preferredRepo ||
-        repos.find((r) => /mvrt\.com/i.test(r.fullName))?.fullName ||
-        repos.find((r) => /website-generator/i.test(r.fullName))?.fullName ||
-        repos[0]?.fullName ||
-        `${username}/website-generator`;
+        mergedRepos.find(
+          (r) => r.fullName.toLowerCase() === 'mvrt-115/mvrt-115.github.io'
+        )?.fullName ||
+        mergedRepos.find((r) => /mvrt/i.test(r.fullName))?.fullName ||
+        mergedRepos[0]?.fullName ||
+        'mvrt-115/mvrt-115.github.io';
 
+      const selectedRepoObj = mergedRepos.find((r) => r.fullName === defaultRepo);
       const session: GitHubAuthSession = {
         token: token.trim(),
         username,
         avatarUrl,
         repoSlug: defaultRepo,
-        defaultBranch: 'main'
+        defaultBranch: selectedRepoObj?.defaultBranch || 'master'
       };
       setGhSession(session);
 
-      // Automatically pull latest `main` right after login!
+      // Automatically pull latest `master`/`main` right after login!
       await handleAutoPullFromMain(session.token, defaultRepo, false);
-      showToast(`Signed in as @${username} & synced main!`);
+      showToast(`Signed in as @${username} & synced ${defaultRepo}!`);
     } catch (err: any) {
       setGhResult({
         message: err?.message || 'GitHub login failed',
@@ -742,7 +758,11 @@ export const MvrtGeneratorApp: React.FC = () => {
                   className={ghSyncing ? 'animate-spin' : ''}
                   color="#34d399"
                 />
-                <span>{ghSyncing ? 'Syncing...' : 'Sync main'}</span>
+                <span>
+                  {ghSyncing
+                    ? 'Syncing...'
+                    : `Sync ${ghSession.defaultBranch || 'main'}`}
+                </span>
               </button>
 
               <button

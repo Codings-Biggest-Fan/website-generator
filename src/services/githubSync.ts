@@ -159,7 +159,7 @@ export async function autoPullFromMain(
     )
     .map((t) => t.path.replace(/^generated-site\//, ''));
 
-  // Prefer site-data/mvrt-site.json on main
+  // Prefer site-data/mvrt-site.json on default branch (main/master)
   const dataEntry =
     treeItems.find((t) => t.path === 'site-data/mvrt-site.json') ||
     treeItems.find((t) => t.path === 'generated-site/site-data/mvrt-site.json');
@@ -195,7 +195,7 @@ export async function autoPullFromMain(
     remoteAssetPaths,
     message: siteData
       ? `Synced latest site data from ${slug}@${branch} (${headSha.slice(0, 7)})`
-      : `Connected to ${slug}@${branch} (${headSha.slice(0, 7)})`
+      : `Connected to ${slug}@${branch} (${headSha.slice(0, 7)}) — loaded ${remoteAssetPaths.length} assets from ${branch}`
   };
 }
 

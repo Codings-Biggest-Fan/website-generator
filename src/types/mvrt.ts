@@ -24,8 +24,11 @@ export interface MvrtEventItem {
   id: string;
   title: string;
   dateText: string;
+  isoDate?: string; // YYYY-MM-DD for interactive monthly calendar grid
+  endDate?: string; // Optional YYYY-MM-DD for multi-day events
+  timeText?: string;
   location?: string;
-  category: 'team_event' | 'demo_outreach';
+  category: 'team_meeting' | 'team_event' | 'demo_outreach';
 }
 
 export interface MvrtSeasonRecord {

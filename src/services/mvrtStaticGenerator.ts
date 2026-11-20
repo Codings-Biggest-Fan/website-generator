@@ -795,6 +795,24 @@ ${renderSubpageHeader('Calendar')}
         <div class="calendar-embed-wrapper aspect4by3">
           <iframe src="${escapeHtml(data.meta.calendarEmbedUrl)}" style="border: 0" width="100%" height="650" frameborder="0" scrolling="no" title="MVRT Team Calendar"></iframe>
         </div>
+${
+  data.eventsConfig.items.length > 0
+    ? `        <div style="margin-top: 36px; text-align: left;">
+          <h2>Scheduled MVRT Events (${data.eventsConfig.items.length})</h2>
+          <div class="grid-3">
+${data.eventsConfig.items
+  .map(
+    (ev) => `            <div class="event">
+              <div class="big">${escapeHtml(ev.title)}</div>
+              <h4>${escapeHtml(ev.dateText)}</h4>
+              ${ev.location ? `<p style="font-size: 14px; margin: 6px 0 0;">${escapeHtml(ev.location)}</p>` : ''}
+            </div>`
+  )
+  .join('\n')}
+          </div>
+        </div>`
+    : ''
+}
       </div>
     </div>
   </section>

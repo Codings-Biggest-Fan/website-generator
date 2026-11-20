@@ -2227,3 +2227,245 @@
 .mvrt-ft-input:focus {
   border-color: #a78bfa;
 }
+
+
+/* ==========================================================================
+   Interactive MVRT Team Calendar Grid & Event Editor Modal
+   ========================================================================== */
+
+.mvrt-cal-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.mvrt-cal-view-switch {
+  display: inline-flex;
+  background: #f3eff7;
+  padding: 4px;
+  border-radius: 10px;
+  border: 1px solid #e4dced;
+  gap: 4px;
+}
+
+.mvrt-cal-view-btn {
+  background: transparent;
+  border: none;
+  padding: 7px 14px;
+  border-radius: 7px;
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #5b5466;
+  cursor: pointer;
+  transition: all 0.16s ease;
+}
+
+.mvrt-cal-view-btn.active {
+  background: #662d91;
+  color: #ffffff;
+  box-shadow: 0 3px 10px rgba(102, 45, 145, 0.25);
+}
+
+.mvrt-cal-month-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.mvrt-cal-month-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #3b4045;
+  margin: 0;
+  min-width: 210px;
+  text-align: center;
+}
+
+.mvrt-cal-nav-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mvrt-cal-nav-btn {
+  background: #ffffff;
+  border: 1.5px solid #dfd6ea;
+  color: #662d91;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.15s ease;
+}
+
+.mvrt-cal-nav-btn:hover {
+  background: #662d91;
+  border-color: #662d91;
+  color: #ffffff;
+}
+
+.mvrt-cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  border: 1px solid #e6dff0;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.mvrt-cal-weekday {
+  background: #f8f5fc;
+  color: #662d91;
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-align: center;
+  padding: 10px 6px;
+  border-bottom: 1px solid #e6dff0;
+}
+
+.mvrt-cal-day {
+  min-height: 98px;
+  padding: 7px;
+  border-right: 1px solid #f0ebf6;
+  border-bottom: 1px solid #f0ebf6;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: #ffffff;
+  position: relative;
+  text-align: left;
+  transition: background-color 0.14s ease;
+}
+
+.mvrt-cal-day:nth-child(7n) {
+  border-right: none;
+}
+
+.mvrt-cal-day.is-outside {
+  background: #faf9fc;
+  color: #b4aebc;
+}
+
+.mvrt-cal-day.is-today {
+  background: #f7f2fc;
+}
+
+.mvrt-edit-mode .mvrt-cal-day:hover {
+  background: #f4ecfb;
+  cursor: pointer;
+}
+
+.mvrt-cal-day-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 700;
+  color: #4a4f55;
+}
+
+.mvrt-cal-day.is-today .mvrt-cal-day-num {
+  background: #662d91;
+  color: #ffffff;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+.mvrt-cal-day-add-hint {
+  opacity: 0;
+  color: #662d91;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  transition: opacity 0.14s ease;
+}
+
+.mvrt-edit-mode .mvrt-cal-day:hover .mvrt-cal-day-add-hint {
+  opacity: 1;
+}
+
+.mvrt-cal-event-pill {
+  display: block;
+  width: 100%;
+  border: none;
+  border-radius: 5px;
+  padding: 3px 6px;
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: #ffffff;
+  text-align: left;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background: #662d91;
+  transition: filter 0.14s ease, transform 0.12s ease;
+}
+
+.mvrt-cal-event-pill:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.mvrt-cal-event-pill.cat-team_meeting {
+  background: #2563eb;
+}
+
+.mvrt-cal-event-pill.cat-demo_outreach {
+  background: #059669;
+}
+
+.mvrt-cal-legend {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+  font-size: 13px;
+  color: #555;
+}
+
+.mvrt-cal-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mvrt-cal-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+@media (max-width: 720px) {
+  .mvrt-cal-day {
+    min-height: 68px;
+    padding: 4px;
+  }
+  .mvrt-cal-event-pill {
+    font-size: 10px;
+    padding: 2px 4px;
+  }
+}

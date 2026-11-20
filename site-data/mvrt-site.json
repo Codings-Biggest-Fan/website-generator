@@ -15,11 +15,10 @@
     ],
     "heroSubtitle": "We are the Monta Vista Robotics Team from Cupertino, California. We build robots, mentor students, and create hands-on STEM opportunities through outreach and competition. Participating in the FIRST Robotics Competition as Team 115!",
     "heroSlides": [
-      "https://mvrt.com/assets/images/robot-images/robot_25.webp",
-      "https://mvrt.com/assets/images/home-page-slides/DSC00685-2.JPG",
       "https://mvrt.com/assets/images/home-page-slides/DSC00747.JPG",
       "https://mvrt.com/assets/images/home-page-slides/im2.webp",
-      "https://mvrt.com/assets/images/home-page-slides/im1.webp"
+      "https://mvrt.com/assets/images/home-page-slides/im1.webp",
+      "https://mvrt.com/assets/images/home-page-slides/DSC00685-2.JPG"
     ],
     "registrationOpen": true,
     "registrationSeasonLabel": "26-27",
@@ -51,21 +50,27 @@
       {
         "id": "evt-kickoff",
         "title": "Kickoff",
-        "dateText": "January 9, 2027, 9:00 AM – 18:00 PM",
+        "dateText": "January 9, 2027, 9:00 AM – 6:00 PM",
+        "isoDate": "2027-01-09",
+        "timeText": "9:00 AM – 6:00 PM",
         "location": "Monta Vista High School Robotics Shop",
         "category": "team_event"
       },
       {
         "id": "evt-sac",
         "title": "District Sacramento Event",
-        "dateText": "March 19-21, 2027",
+        "dateText": "March 19–21, 2027",
+        "isoDate": "2027-03-19",
+        "endDate": "2027-03-21",
         "location": "Sacramento, CA",
         "category": "team_event"
       },
       {
         "id": "evt-contra-costa",
         "title": "CA District Contra Costa Event",
-        "dateText": "April 2-4, 2027",
+        "dateText": "April 2–4, 2027",
+        "isoDate": "2027-04-02",
+        "endDate": "2027-04-04",
         "location": "Contra Costa, CA",
         "category": "team_event"
       }

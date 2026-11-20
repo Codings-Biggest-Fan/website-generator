@@ -26,7 +26,7 @@ import './MvrtGeneratorApp.css';
 
 type AppMode = 'editor' | 'preview';
 
-const STORAGE_KEY = 'mvrt_website_generator_data_v3';
+const STORAGE_KEY = 'mvrt_website_generator_data_v4';
 
 interface CatalogAssetItem {
   path: string;

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MVRT | Join</title>
+  <meta name="description" content="Home of the Monta Vista Robotics Team from Cupertino, CA. Participating in the FIRST Robotics Competition as Team 115!" />
+  <meta property="og:title" content="MVRT | Join" />
+  <meta property="og:image" content="https://mvrt.com/assets/images/bull2.jpg" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="MVRT" />
+  <link rel="icon" href="https://mvrt.com/assets/favicons/favicon-32x32.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="https://mvrt.com/assets/favicons/apple-touch-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <!-- Global Navigation (Shared across all 9 MVRT pages) -->
+  <header class="container nav-container " id="subpage-nav">
+    <div class="nav-box">
+      <svg id="menubtn" viewBox="0 0 100 100" role="button" tabindex="0" aria-label="Toggle Navigation" onclick="this.classList.toggle('opened'); document.getElementById('top-nav').classList.toggle('opened'); document.documentElement.classList.toggle('noscroll');">
+        <path class="line line1" d="M 20 29 H 82 C 91 29 107 91 77 75 l -52 -50"></path>
+        <path class="line line2" d="M 20 50 H 80 "></path>
+        <path class="line line3" d="M 20 71 H 82 C 91 71 107 9 77 25 L 25 75 "></path>
+      </svg>
+      <a class="logo" href="index.html">
+        <h1>MVRT</h1>
+      </a>
+      <nav>
+        <ul class="nav navbar-nav menu" id="top-nav">
+          <li class="" style="transition-delay: 0.045s;"><a href="index.html"><b>HOME</b></a></li>
+          <li class="" style="transition-delay: 0.07s;"><a href="about.html"><b>ABOUT</b></a></li>
+          <li class="" style="transition-delay: 0.095s;"><a href="outreach.html"><b>OUTREACH</b></a></li>
+          <li class="" style="transition-delay: 0.12s;"><a href="calendar.html"><b>CALENDAR</b></a></li>
+          <li class="" style="transition-delay: 0.145s;"><a href="resources.html"><b>RESOURCES</b></a></li>
+          <li class="" style="transition-delay: 0.17s;"><a href="contact.html"><b>CONTACT</b></a></li>
+          <li class="" style="transition-delay: 0.195s;"><a href="sponsors.html"><b>SPONSORS</b></a></li>
+          <li class="" style="transition-delay: 0.22s;"><a href="newsletters.html"><b>NEWSLETTERS</b></a></li>
+          <li style="transition-delay: 0.245s;">
+            <a href="join.html" class="btn-main-nav btn-main-nav-sm active-pill" style="color: #fff;">
+              Join <i class="far fa-arrow-alt-circle-right"></i>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <section class="header-secondary">
+    <div class="container">
+      <h1 class="title">Join</h1>
+    </div>
+  </section>
+  <hr class="subpage-divider" />
+
+  <section class="information">
+    <div class="container">
+      <p class="join-intro">We would love to have you on board! Each year, we are tasked to build a robot depending on the game released by the FIRST Robotics Competition. We need all the minds we can get to make this happen. Additionally, we also host numerous outreach events and programs to spread STEM opportunities, including an annual summer camp! Joining the team is easy—just follow the instructions below. If you want to learn more about the team, visit the <a href="about.html">about page</a>!</p>
+      <div class="tabs" role="tablist">
+        <button class="tab tab-1 tab-btn active" role="tab" onclick="switchJoinTab('regular', this)">Regular Season</button>
+        <button class="tab tab-2 tab-btn" role="tab" onclick="switchJoinTab('faqs', this)">FAQs</button>
+      </div>
+      <div class="content content-2 tab-card">
+        <div class="content__section visible text-center" id="join-tab-regular">
+          <h1>Registration for the 26-27 season is currently open!</h1>
+          <h3>We would love to have you on board! Joining the team is easy—just follow the instructions in the <a href="https://docs.google.com/forms/d/e/1FAIpQLSfTeJtFdQxTswKR7rM4xgl90srHzusPvcZLDdKFTQjCzGlfZg/viewform" target="_blank" rel="noopener">interest form</a>!</h3>
+          <div style="margin: 28px 0;">
+            <a class="btn btn-main" href="https://docs.google.com/forms/d/e/1FAIpQLSfTeJtFdQxTswKR7rM4xgl90srHzusPvcZLDdKFTQjCzGlfZg/viewform" target="_blank" rel="noopener">Open Interest Form <i class="fas fa-arrow-right"></i></a>
+          </div>
+          <h3 style="margin-top: 28px;">Questions? <a href="contact.html">Contact Us</a>!</h3>
+        </div>
+        <div class="content__section" id="join-tab-faqs">
+          <h1>Frequently Asked Questions</h1>
+          <div class="faq-list">
+            <div class="faq-item">
+              <h3>1. Is there a test/tryout to be a part of robotics, or can anyone join?</h3>
+              <p>Nope, all a student needs to do is complete the registration process and they can be a part of the team!</p>
+            </div>
+            <div class="faq-item">
+              <h3>2. Do students need to pick a specific division on the team, or can they do everything?</h3>
+              <p>Students can be a part of as many or as few divisions as they feel comfortable with. Students can always try working in different divisions and learn about all aspects of the team! There is no requirement to choose a division at any point of time.</p>
+            </div>
+            <div class="faq-item">
+              <h3>3. Do students need to attend all meetings?</h3>
+              <p>Nope, students are not required to attend every meeting, and they should decide whether or not to attend a meeting based on their academic progress and other activities they take part in. All online training sessions will be recorded and available on the resources section of the website if a student misses a meeting. Although missing a lot of meetings will result in the student not getting access to the interactive activities, and so we don't recommend students to only watch the online recordings.</p>
+            </div>
+            <div class="faq-item">
+              <h3>4. What exactly does the $250 donation contribute to?</h3>
+              <p>The donations we receive help pay for the expense of the various tools and parts we use, such as crimpers, drills, stock aluminum, etc. These donations also help us cover the expenses for organizing meetings and services, such as securing space for large team events and bringing food and other essential commodities. We require about $50k-$70k to operate the team each year, and donations help us cover part of that cost.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Global Footer (Shared across all 9 MVRT pages) -->
+  <footer>
+    <div class="container text-center">
+      <div class="block">
+        <a class="footer-logo" href="index.html">
+          <h1>MVRT</h1>
+        </a>
+        <div class="socialmediabar">
+          <a href="https://instagram.com/mvrt115" title="Check out our Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.facebook.com/mvrt115/" title="Check out our Facebook" target="_blank" rel="noopener"><i class="fab fa-facebook-square"></i></a>
+          <a href="https://twitter.com/mvrt115?lang=en" title="Check out our Twitter" target="_blank" rel="noopener"><i class="fab fa-twitter"></i></a>
+          <a href="https://www.youtube.com/channel/UCLtNWThFAeeVWhCuQAW2miA" title="Check out our YouTube Channel" target="_blank" rel="noopener"><i class="fab fa-youtube"></i></a>
+        </div>
+        <p class="copyright-text">2026 &copy; Monta Vista Robotics Team</p>
+        <p class="copyright-text">
+          Made with <a href="https://www.youtube.com/watch?v=8oE5Z2GLhNc" target="_blank" rel="noopener"><i class="fas fa-heart"></i></a> in Cupertino, CA
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function switchJoinTab(tabId, btn) {
+      document.querySelectorAll('#join-tab-regular, #join-tab-faqs').forEach(function(sec) {
+        sec.classList.remove('visible');
+      });
+      document.querySelectorAll('.tab-btn').forEach(function(b) {
+        b.classList.remove('active');
+      });
+      var target = document.getElementById('join-tab-' + tabId);
+      if (target) target.classList.add('visible');
+      if (btn) btn.classList.add('active');
+    }
+  </script>
+</body>
+</html>

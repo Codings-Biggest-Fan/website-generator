@@ -1,0 +1,2229 @@
+/* ==========================================================================
+   MVRT.com Authentic Live Preview Styles (FRC Team 115 Visual Identity)
+   Faithful reproduction of https://mvrt.com with responsive container + media support
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Montserrat:wght@400;500;600;700&display=swap');
+
+.mvrt-site-root {
+  font-family: 'Josefin Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 25px;
+  color: #3b4045;
+  background-color: #ffffff;
+  min-height: 100%;
+  overflow-x: hidden;
+  position: relative;
+  -webkit-font-smoothing: antialiased;
+  container-type: inline-size;
+  container-name: mvrt-root;
+}
+
+.mvrt-site-root *,
+.mvrt-site-root *::before,
+.mvrt-site-root *::after {
+  box-sizing: border-box;
+}
+
+.mvrt-container {
+  width: 90%;
+  max-width: 1170px;
+  margin: 0 auto;
+}
+
+/* ==========================================================================
+   1. Global Header & Navigation (#home-nav vs .nav-container)
+   ========================================================================== */
+
+.mvrt-navbar {
+  width: 100%;
+  min-height: 74px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  transition: background 0.25s ease;
+}
+
+.mvrt-navbar.is-home {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: transparent;
+  background-image: linear-gradient(
+    to right,
+    #ffffff 0%,
+    35vw,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+
+.mvrt-nav-box {
+  width: 92%;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  position: relative;
+}
+
+/* MVRT Brand Logo */
+.mvrt-brand-logo {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  user-select: none;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 45;
+  text-decoration: none;
+}
+
+.mvrt-brand-logo h1 {
+  color: #662d91;
+  font-size: 40px;
+  font-weight: 400;
+  font-family: 'Montserrat', sans-serif;
+  margin: 6px 0 0;
+  line-height: 1;
+  position: relative;
+  letter-spacing: 0.01em;
+}
+
+.mvrt-brand-logo h1::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 0%;
+  margin-left: 50%;
+  height: 3px;
+  transition: 0.15s ease;
+  background-color: #662d91;
+}
+
+.mvrt-brand-logo:hover h1::after,
+.mvrt-brand-logo:focus-visible h1::after {
+  width: 100%;
+  margin-left: 0;
+}
+
+/* Primary Menu Links */
+.mvrt-nav-menu {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  margin: 10px 0 0;
+  padding: 0;
+  gap: 24px;
+}
+
+.mvrt-nav-item {
+  display: inline-block;
+}
+
+.mvrt-nav-link {
+  background: none;
+  border: none;
+  color: #444444;
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  position: relative;
+  padding: 4px 0;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+}
+
+.mvrt-nav-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 0%;
+  margin-left: 50%;
+  height: 2px;
+  transition: 0.15s ease;
+  background-color: #662d91;
+}
+
+.mvrt-nav-link:hover::after,
+.mvrt-nav-link:focus-visible::after,
+.mvrt-nav-link.active::after {
+  width: 100%;
+  margin-left: 0;
+}
+
+/* Animated 3-line SVG Hamburger Button (#menubtn) */
+.mvrt-menubtn {
+  display: none;
+  transition: 0.2s;
+  background-color: transparent;
+  border: none;
+  border-radius: 50%;
+  width: 64px;
+  height: 64px;
+  padding: 13px;
+  cursor: pointer;
+  z-index: 50;
+}
+
+.mvrt-menubtn:active {
+  background-color: #deddff;
+}
+
+.mvrt-menubtn .line {
+  fill: none;
+  stroke: #000000;
+  stroke-width: 7;
+  transition: 0.25s ease;
+  stroke-dashoffset: 0;
+}
+
+.mvrt-menubtn .line1,
+.mvrt-menubtn .line3 {
+  stroke-dasharray: 60 197;
+}
+
+.mvrt-menubtn .line2 {
+  stroke-dasharray: 60 60;
+}
+
+.mvrt-menubtn.opened .line1,
+.mvrt-menubtn.opened .line3 {
+  stroke-dasharray: 73 172;
+  stroke-dashoffset: -128;
+  stroke-width: 8;
+}
+
+.mvrt-menubtn.opened .line2 {
+  stroke-dasharray: 0 60;
+  stroke-dashoffset: -30.5;
+}
+
+/* Signature MVRT Pill Buttons (.btn-main, .btn-main-nav, .btn-main-alt) */
+.mvrt-btn-main {
+  color: #ffffff;
+  border-radius: 30px;
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.2;
+  padding: 15px 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: #662d91;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 15px 40px rgba(173, 120, 251, 0.5);
+  background-image: linear-gradient(
+    to top,
+    rgba(188, 145, 252, 0) 0%,
+    rgba(173, 120, 251, 0.25) 100%
+  );
+  transition: all 0.2s ease-in-out;
+}
+
+.mvrt-btn-main:hover,
+.mvrt-btn-main:focus-visible {
+  background-color: #662d91;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 18px 44px rgba(173, 120, 251, 0.62);
+}
+
+.mvrt-btn-main-sm,
+.mvrt-btn-nav-sm {
+  padding: 12px 35px;
+  text-transform: uppercase;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.mvrt-btn-alt {
+  color: #000000;
+  border-radius: 30px;
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  padding: 15px 40px;
+  margin: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  background-color: #ffffff;
+  background-image: linear-gradient(
+    120deg,
+    rgba(245, 244, 244, 0.85) 0%,
+    rgba(255, 255, 255, 0.83) 100%
+  );
+  transition: all 0.2s ease-in-out;
+}
+
+.mvrt-btn-alt:hover,
+.mvrt-btn-alt:focus-visible {
+  background-color: #ffffff;
+  color: #3d3d3d;
+  transform: translateY(-1px);
+}
+
+/* Maintainer Quick Edit Overlay Pill */
+.mvrt-editable-region {
+  position: relative;
+}
+
+.mvrt-quick-edit-pill {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  z-index: 35;
+  background: rgba(24, 18, 36, 0.88);
+  color: #f3e8ff;
+  border: 1px solid rgba(173, 120, 251, 0.45);
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1.2;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
+  transition: all 0.18s ease;
+}
+
+.mvrt-quick-edit-pill:hover {
+  background: #662d91;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   2. Homepage Sections (.hero-area, .feature, .third-section, .feature-list, .call-to-action)
+   ========================================================================== */
+
+.mvrt-hero-area {
+  position: relative;
+  min-height: 88vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  background-color: #ffffff;
+  padding-top: 64px;
+}
+
+.mvrt-hero-area > .mvrt-quick-edit-pill {
+  top: 82px;
+}
+
+.mvrt-hero-splashing {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  background-color: #ffffff;
+}
+
+.mvrt-hero-slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transition: opacity 1.1s ease-in-out;
+  background-color: #ffffff;
+}
+
+.mvrt-hero-splash-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: right center;
+  background-color: #ffffff;
+  display: block;
+}
+
+.mvrt-hero-fade {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background-image: linear-gradient(
+    to right,
+    #ffffff 0%,
+    38vw,
+    rgba(102, 45, 145, 0) 100%
+  );
+  pointer-events: none;
+}
+
+.mvrt-hero-container {
+  position: relative;
+  z-index: 3;
+  width: 90%;
+  max-width: 1170px;
+  margin: 0 auto;
+  padding: 48px 0;
+}
+
+.mvrt-hero-block {
+  max-width: 650px;
+}
+
+.mvrt-hero-title {
+  font-size: 60px;
+  font-weight: 700;
+  padding-bottom: 19px;
+  margin: 30px 0 0;
+  line-height: 1.2;
+  color: #3d3d3d;
+}
+
+.mvrt-hero-typewriter {
+  color: #3d3d3d;
+}
+
+.mvrt-typed-cursor {
+  display: inline-block;
+  margin-left: 1px;
+  color: #3d3d3d;
+  font-weight: 400;
+  animation: mvrtBlink 0.75s infinite;
+}
+
+@keyframes mvrtBlink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.mvrt-hero-subtitle {
+  font-size: 20px;
+  line-height: 1.35;
+  font-weight: 300;
+  color: #3d3d3d;
+  margin: 0;
+}
+
+.mvrt-first-link {
+  color: #0275d8;
+  text-decoration: none;
+}
+
+.mvrt-first-link:hover {
+  color: #014c8c;
+  text-decoration: underline;
+}
+
+.mvrt-hero-block .mvrt-btn-main {
+  margin-top: 30px;
+}
+
+.mvrt-hero-dots {
+  display: flex;
+  gap: 8px;
+  margin-top: 28px;
+}
+
+.mvrt-hero-dot {
+  width: 26px;
+  height: 4px;
+  border-radius: 2px;
+  border: none;
+  background: rgba(102, 45, 145, 0.22);
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.2s ease;
+}
+
+.mvrt-hero-dot.active {
+  background: #662d91;
+  width: 40px;
+}
+
+/* Generic Section & Heading */
+.mvrt-section {
+  padding: 100px 0;
+  position: relative;
+}
+
+.mvrt-feature-section {
+  padding-top: 28px;
+  padding-bottom: 100px;
+  background-color: #ffffff;
+}
+
+.mvrt-heading {
+  text-align: center;
+  color: #777777;
+  padding-bottom: 36px;
+}
+
+.mvrt-heading h2 {
+  color: #3c3c3c;
+  padding-bottom: 15px;
+  margin: 0;
+  text-transform: capitalize;
+  font-weight: 700;
+  font-size: 40px;
+  line-height: 40px;
+}
+
+.mvrt-heading h3 {
+  font-size: 23px;
+  line-height: 28px;
+  font-weight: 300;
+  color: #777777;
+  margin: 0;
+}
+
+.mvrt-link-inline {
+  color: #0275d8;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.18s ease;
+}
+
+.mvrt-link-inline:hover {
+  color: #014c8c;
+  text-decoration: underline;
+}
+
+/* Upcoming Events 3-Column Layout (.feature .events) */
+.mvrt-events-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+.mvrt-events-col {
+  padding: 0 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  text-align: center;
+}
+
+.mvrt-events-col > p {
+  margin: 0;
+  color: #662d91;
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.mvrt-events-col > h3 {
+  margin: 0;
+  color: #596168;
+  font-size: 17px;
+  font-weight: 300;
+  line-height: 1.45;
+}
+
+.mvrt-event-card {
+  min-height: 106px;
+  padding: 20px 22px;
+  border: 1px solid #e8e1ed;
+  border-left: 5px solid #662d91;
+  border-radius: 5px;
+  background: #ffffff;
+  text-align: left;
+}
+
+.mvrt-event-card .mvrt-event-big {
+  color: #3b4045;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 1.15;
+  margin: 0;
+}
+
+.mvrt-event-card h4 {
+  margin: 10px 0 0;
+  color: #662d91;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+/* Registration CTA Banner (.third-section) */
+.mvrt-third-section {
+  background: linear-gradient(
+      125deg,
+      rgba(62, 28, 87, 0.933) 0%,
+      rgba(116, 81, 152, 0.844) 100%
+    ),
+    url('https://mvrt.com/assets/images/thirdbg.jpg') no-repeat center;
+  padding: 90px 0;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: #ffffff;
+  position: relative;
+}
+
+.mvrt-third-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.mvrt-third-copy {
+  flex: 1 1 540px;
+}
+
+.mvrt-third-section h2 {
+  color: #ffffff;
+  font-size: 30px;
+  line-height: 35px;
+  font-weight: 700;
+  margin: 0 0 10px;
+  padding-bottom: 0;
+  text-align: left;
+  text-transform: capitalize;
+}
+
+.mvrt-third-section p {
+  color: #ffffff;
+  font-size: 18px;
+  line-height: 25px;
+  font-weight: 300;
+  margin: 0;
+}
+
+.mvrt-third-action {
+  flex: 0 0 auto;
+  text-align: center;
+}
+
+/* Our Team At A Glance (.feature-list.section) */
+.mvrt-glance-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 40px;
+}
+
+.mvrt-glance-row + .mvrt-glance-row {
+  margin-top: 100px;
+}
+
+.mvrt-glance-col-center {
+  text-align: center;
+}
+
+.mvrt-program-images {
+  border-radius: 50%;
+  width: 340px;
+  height: 340px;
+  max-width: 75%;
+  object-fit: cover;
+  background-color: #ffffff;
+  box-shadow: 0px 0px 37px 13px rgba(0, 0, 0, 0.38);
+  display: inline-block;
+}
+
+.mvrt-program-images.is-robot {
+  object-fit: contain;
+  padding: 4%;
+  background-color: #ffffff;
+}
+
+.mvrt-glance-metric {
+  margin-bottom: 24px;
+}
+
+.mvrt-glance-metric:last-child {
+  margin-bottom: 0;
+}
+
+.mvrt-glance-metric h3 {
+  font-size: 23px;
+  line-height: 25px;
+  font-weight: 300;
+  color: #3b4045;
+  margin: 0 0 4px;
+}
+
+.mvrt-glance-metric h1 {
+  font-size: 44px;
+  line-height: 50px;
+  font-weight: 300;
+  color: #3b4045;
+  margin: 0;
+}
+
+.mvrt-season-subheading {
+  color: #3c3c3c;
+  padding-bottom: 10px;
+  text-transform: capitalize;
+  font-weight: 500;
+  font-size: 32px;
+  line-height: 42px;
+  margin: 0;
+}
+
+.mvrt-season-game-italic {
+  font-size: 18px;
+  line-height: 25px;
+  font-weight: 300;
+  font-style: italic;
+  color: #3b4045;
+  margin: 0 0 22px;
+}
+
+.mvrt-season-label {
+  font-size: 23px;
+  line-height: 25px;
+  font-weight: 300;
+  color: #3b4045;
+  margin: 22px 0 4px;
+}
+
+.mvrt-season-item {
+  font-size: 20px;
+  line-height: 24px;
+  font-weight: 400;
+  color: #3b4045;
+  margin: 0;
+}
+
+.mvrt-glance-learn-more {
+  margin-top: 24px;
+}
+
+/* Subscribe To Our Newsletter (.call-to-action) */
+.mvrt-call-to-action {
+  padding: 90px 0;
+  background: linear-gradient(
+      125deg,
+      rgba(62, 28, 87, 0.933) 0%,
+      rgba(116, 81, 152, 0.844) 100%
+    ),
+    url('https://mvrt.com/assets/images/thirdbg.jpg') no-repeat center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: #ffffff;
+  position: relative;
+  text-align: center;
+}
+
+.mvrt-cta-block {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.mvrt-cta-block h2 {
+  font-size: 30px;
+  line-height: 35px;
+  font-weight: 400;
+  margin: 0 0 6px;
+  color: #ffffff;
+}
+
+.mvrt-cta-block p {
+  font-size: 18px;
+  line-height: 25px;
+  font-weight: 300;
+  color: #ffffff;
+  margin: 0;
+}
+
+.mvrt-cta-input-group {
+  margin: 30px auto 0;
+  display: flex;
+  max-width: 560px;
+  justify-content: center;
+}
+
+.mvrt-cta-input-group input {
+  flex: 1;
+  height: 50px;
+  border-top-left-radius: 40px;
+  border-bottom-left-radius: 40px;
+  border: none;
+  padding: 0 18px;
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 15px;
+  color: #3b4045;
+  background: #ffffff;
+  outline: none;
+}
+
+.mvrt-cta-input-group input::placeholder {
+  color: #999999;
+}
+
+.mvrt-cta-input-group .mvrt-btn-main {
+  padding: 13px 40px;
+  height: 50px;
+  border-radius: 0 30px 30px 0;
+}
+
+/* ==========================================================================
+   3. Subpage Secondary Header (.header-secondary) & Tabbed Card (.information)
+   ========================================================================== */
+
+.mvrt-header-secondary {
+  height: 18vh;
+  min-height: 120px;
+  max-height: 170px;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.mvrt-header-secondary .mvrt-title {
+  font-size: 60px;
+  font-weight: 700;
+  padding-bottom: 5px;
+  padding-top: 10px;
+  margin: 20px 0 0;
+  line-height: 1.2;
+  text-align: center;
+  color: #3b4045;
+}
+
+.mvrt-subpage-hr {
+  border: 0;
+  border-top: 1px solid #eeeeee;
+  margin: 0 0 20px;
+}
+
+.mvrt-content-hr {
+  border: 0;
+  border-top: 1px solid #eeeeee;
+  margin: 18px 0 22px;
+}
+
+/* .information container & tabs */
+.mvrt-information-container {
+  position: relative;
+  margin: 20px auto 70px;
+  padding: 20px;
+  width: 78%;
+  max-width: 1020px;
+  border-radius: 2px;
+}
+
+.mvrt-tabs {
+  display: flex;
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.mvrt-tab {
+  text-align: center;
+  background: #ffffff;
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 10px 14px;
+  transition: all 0.25s ease;
+  color: #0275d8;
+  display: block;
+  cursor: pointer;
+}
+
+.mvrt-tab:hover {
+  color: #4f2cca;
+  background-color: rgba(79, 44, 202, 0.1);
+}
+
+.mvrt-tab.active {
+  color: #4f2cca;
+  background-color: rgba(79, 44, 202, 0.1);
+  border-bottom: 2px solid #4f2cca;
+}
+
+.mvrt-info-content {
+  position: relative;
+  background-color: #ffffff;
+  padding: 28px 36px 40px;
+  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.12);
+  width: 100%;
+}
+
+.mvrt-info-content h1 {
+  font-size: 44px;
+  line-height: 50px;
+  font-weight: 300;
+  color: #3b4045;
+  margin: 0;
+}
+
+.mvrt-info-content h2 {
+  font-size: 30px;
+  line-height: 35px;
+  font-weight: 500;
+  color: #3b4045;
+  margin: 24px 0 10px;
+}
+
+.mvrt-info-content p {
+  font-size: 18px;
+  line-height: 25px;
+  font-weight: 300;
+  color: #3b4045;
+  margin: 0 0 16px;
+}
+
+.mvrt-goals-list {
+  list-style: disc;
+  padding-left: 24px;
+  margin: 8px 0 16px;
+}
+
+.mvrt-goals-list li {
+  font-size: 18px;
+  line-height: 26px;
+  font-weight: 300;
+  color: #3b4045;
+  margin-bottom: 4px;
+}
+
+/* ==========================================================================
+   4. About -> Team History (.cd-horizontal-timeline)
+   ========================================================================== */
+
+.mvrt-cd-timeline {
+  margin: 28px auto 16px;
+}
+
+.mvrt-timeline-bar {
+  position: relative;
+  height: 100px;
+  width: 96%;
+  max-width: 920px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+}
+
+.mvrt-timeline-nav-btn {
+  position: relative;
+  z-index: 3;
+  height: 34px;
+  width: 34px;
+  border-radius: 50%;
+  border: 2px solid #dfdfdf;
+  background: #ffffff;
+  color: #662d91;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: border-color 0.3s ease, color 0.3s ease;
+}
+
+.mvrt-timeline-nav-btn:hover:not(:disabled) {
+  border-color: #662d90;
+}
+
+.mvrt-timeline-nav-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+  color: #cccccc;
+}
+
+.mvrt-events-wrapper {
+  position: relative;
+  height: 100%;
+  margin: 0 14px;
+  flex: 1;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+}
+
+.mvrt-events-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+.mvrt-events-line {
+  position: relative;
+  height: 2px;
+  background: #dfdfdf;
+  margin-top: 56px;
+  min-width: 100%;
+  transition: transform 0.3s ease;
+}
+
+.mvrt-filling-line {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background-color: #662d91;
+  transition: width 0.3s ease;
+}
+
+.mvrt-timeline-year-node {
+  position: absolute;
+  bottom: 0;
+  z-index: 2;
+  text-align: center;
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 20px;
+  font-weight: 300;
+  padding: 0 0 15px;
+  color: #383838;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.mvrt-timeline-year-node::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -5px;
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  border: 2px solid #dfdfdf;
+  background-color: #f8f8f8;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.mvrt-timeline-year-node:hover::after {
+  background-color: #662d90;
+  border-color: #662d90;
+}
+
+.mvrt-timeline-year-node.older-event::after {
+  border-color: #662d90;
+}
+
+.mvrt-timeline-year-node.selected {
+  color: #383838;
+  font-weight: 400;
+}
+
+.mvrt-timeline-year-node.selected::after {
+  background-color: #662d90;
+  border-color: #662d90;
+}
+
+.mvrt-timeline-event-content {
+  margin-top: 24px;
+  padding: 0 2%;
+}
+
+.mvrt-timeline-season-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.25fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.mvrt-timeline-year-heading {
+  font-size: 64px !important;
+  font-weight: 700 !important;
+  line-height: 1.1 !important;
+  color: #3b4045 !important;
+  margin: 0 0 6px !important;
+}
+
+.mvrt-timeline-game-em {
+  display: block;
+  font-style: italic;
+  font-size: 17px;
+  font-weight: 300;
+  color: #666666;
+  margin: 6px 0 18px;
+}
+
+.mvrt-timeline-subhead {
+  font-size: 23px !important;
+  font-weight: 300 !important;
+  color: #3b4045 !important;
+  margin: 18px 0 8px !important;
+}
+
+.mvrt-timeline-bullet-list {
+  list-style: disc;
+  padding-left: 22px;
+  margin: 0 0 16px;
+}
+
+.mvrt-timeline-bullet-list li {
+  font-size: 16px;
+  line-height: 1.55;
+  font-weight: 300;
+  color: #3b4045;
+  margin-bottom: 4px;
+}
+
+.mvrt-timeline-team-photo {
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  display: block;
+  margin-left: auto;
+}
+
+/* ==========================================================================
+   5. About -> Past Robots (.bot-card)
+   ========================================================================== */
+
+.mvrt-bot-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 60px;
+  padding: 50px 20px;
+  border-bottom: 1px solid #eeeeee;
+}
+
+.mvrt-bot-card:last-child {
+  border-bottom: none;
+}
+
+.mvrt-bot-card-info {
+  flex: 0 1 400px;
+  text-align: center;
+}
+
+.mvrt-bot-card-year {
+  font-size: 30px;
+  font-weight: 300;
+  color: #3b4045;
+  margin-bottom: 5px;
+  line-height: 1.2;
+}
+
+.mvrt-bot-card-game {
+  font-size: 26px;
+  font-style: italic;
+  font-weight: 300;
+  color: #888888;
+  display: block;
+  margin-bottom: 25px;
+  line-height: 1.25;
+}
+
+.mvrt-bot-card-label {
+  font-size: 22px;
+  font-weight: 300;
+  color: #888888;
+  margin-bottom: 5px;
+}
+
+.mvrt-bot-card-name {
+  font-size: 20px;
+  font-weight: 400;
+  color: #3b4045;
+}
+
+.mvrt-bot-card-binder {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 10px 28px;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #555555;
+  background-color: #eeeeee;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.mvrt-bot-card-binder:hover {
+  background-color: #662d91;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.mvrt-bot-card-image {
+  flex: 0 0 280px;
+  max-width: 280px;
+  display: flex;
+  justify-content: center;
+}
+
+.mvrt-bot-card-image img {
+  width: 250px;
+  height: 250px;
+  object-fit: contain;
+  border-radius: 50%;
+  background-color: #ffffff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* ==========================================================================
+   6. About -> Leadership (.team & .profile-box)
+   ========================================================================== */
+
+.mvrt-team-section {
+  width: 100%;
+}
+
+.mvrt-tier-heading {
+  text-align: center;
+  text-decoration: underline;
+  font-size: 30px !important;
+  font-weight: 300 !important;
+  color: #3b4045 !important;
+  margin: 28px 0 12px !important;
+}
+
+.mvrt-leadership-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 18px;
+}
+
+.mvrt-profile-box {
+  background: #f7f7f7;
+  box-shadow: 0 2px 6px 0 rgba(47, 83, 151, 0.1);
+  border-radius: 10px;
+  padding: 16px 20px 24px;
+  width: 260px;
+  max-width: 100%;
+  text-align: center;
+  transition: box-shadow 300ms ease;
+}
+
+.mvrt-profile-box:hover {
+  box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.2);
+}
+
+.mvrt-profile-img {
+  margin-top: 16px;
+  margin-bottom: 10px;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 2px 6px 0 rgba(47, 83, 151, 0.1);
+  background: #e9e2f2;
+  display: inline-block;
+}
+
+.mvrt-profile-fallback {
+  margin: 16px auto 10px;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #662d91, #9772e5);
+  color: #ffffff;
+  font-size: 32px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px 0 rgba(47, 83, 151, 0.1);
+}
+
+.mvrt-profile-name {
+  font-size: 23px;
+  line-height: 27px;
+  font-weight: 300;
+  color: #3b4045;
+  margin: 10px 0 5px;
+}
+
+.mvrt-profile-role {
+  font-size: 20px !important;
+  line-height: 24px !important;
+  font-weight: 300 !important;
+  font-style: italic;
+  color: #3b4045 !important;
+  margin: 0 0 16px !important;
+}
+
+/* ==========================================================================
+   7. About -> Members & Mentors (.memberlist)
+   ========================================================================== */
+
+.mvrt-members-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.mvrt-member-search {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #f8f6fb;
+  padding: 6px 14px;
+  border-radius: 30px;
+  border: 1px solid #e4dced;
+}
+
+.mvrt-member-search input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 15px;
+  color: #3b4045;
+  width: 170px;
+}
+
+.mvrt-memberlist {
+  list-style: none;
+  padding: 0;
+  margin: 14px 0 24px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px 16px;
+}
+
+.mvrt-memberlist li {
+  font-size: 15.5px;
+  line-height: 25px;
+  font-weight: 300;
+  color: #3b4045;
+}
+
+.mvrt-mentor-tier-title {
+  font-size: 30px !important;
+  line-height: 35px !important;
+  font-weight: 300 !important;
+  color: #3b4045 !important;
+  margin: 24px 0 8px !important;
+}
+
+/* ==========================================================================
+   8. Outreach Page (.programs-list)
+   ========================================================================== */
+
+.mvrt-programs-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px auto 80px;
+  width: 92%;
+  max-width: 1120px;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.mvrt-program-item {
+  position: relative;
+  width: 100%;
+  padding: 26px 32px;
+  border-radius: 2px;
+  background: #ffffff;
+  filter: drop-shadow(5px 5px 10px rgba(102, 45, 145, 0.28));
+  overflow: hidden;
+}
+
+.mvrt-program-image-wrap {
+  width: 38%;
+  height: auto;
+}
+
+.mvrt-program-item.float-left .mvrt-program-image-wrap {
+  float: left;
+  margin: 4px 30px 16px 0;
+}
+
+.mvrt-program-item.float-right .mvrt-program-image-wrap {
+  float: right;
+  margin: 4px 0 16px 30px;
+}
+
+.mvrt-program-image-wrap img {
+  border: solid 4px #550575;
+  border-radius: 20px;
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+.mvrt-program-text h2 {
+  padding: 12px 0 10px;
+  margin: 0;
+  font-size: 36px;
+  line-height: 1.15;
+  font-weight: 700;
+  color: rgba(77, 26, 114, 0.933);
+}
+
+.polygence-mini-logo img {
+  width: 100px;
+  border: 0px white;
+  margin: 0 10px;
+  vertical-align: middle;
+}
+
+.mvrt-program-text p {
+  font-size: 16px;
+  line-height: 25px;
+  font-weight: 300;
+  color: #000000;
+  margin: 0;
+}
+
+.mvrt-program-links {
+  clear: both;
+  text-align: center;
+  font-weight: 500;
+  padding: 22px 0 6px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.mvrt-program-links a,
+.mvrt-program-links button {
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  padding: 13px 28px;
+  background: #662d91;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.mvrt-program-links .mvrt-resources-btn {
+  background: #eeeeee;
+  color: #3b4045;
+}
+
+.mvrt-program-links .mvrt-join-btn:hover {
+  box-shadow: 0px 0px 20px 5px rgba(102, 45, 145, 0.4);
+}
+
+.mvrt-program-links .mvrt-resources-btn:hover {
+  box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* ==========================================================================
+   9. Calendar Page (.aspect4by3 iframe + Upcoming Summary)
+   ========================================================================== */
+
+.mvrt-calendar-aspect {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 72%;
+  border: 1px solid #e6e1ec;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.mvrt-calendar-aspect iframe {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  border: 0;
+}
+
+/* ==========================================================================
+   10. Resources Page (6 Divisions, 16:9 Thumbnail + Right Card)
+   ========================================================================== */
+
+.mvrt-resources-container {
+  width: 82%;
+  max-width: 880px;
+  margin: 0 auto 84px;
+}
+
+.mvrt-resource-division {
+  margin-bottom: 36px;
+}
+
+.mvrt-resource-division-title {
+  font-size: 44px;
+  line-height: 50px;
+  font-weight: 300;
+  color: #3b4045;
+  margin: 28px 0 16px;
+}
+
+.mvrt-resource-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mvrt-resource-row {
+  display: flex;
+  align-items: stretch;
+  gap: 24px;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.18s ease;
+}
+
+.mvrt-resource-row:hover {
+  transform: translateY(-2px);
+}
+
+.mvrt-resource-thumb {
+  width: 225px;
+  aspect-ratio: 16 / 9;
+  border: 1px solid #e2e2e2;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #550979;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mvrt-resource-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.mvrt-resource-card {
+  flex: 1;
+  background: #ffffff;
+  border: 1px solid #e4e4e4;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  padding: 18px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.mvrt-resource-row:hover .mvrt-resource-card {
+  box-shadow: 0 6px 18px rgba(102, 45, 145, 0.15);
+  border-color: #d0bfe0;
+}
+
+.mvrt-resource-card h3 {
+  font-size: 25px;
+  line-height: 1.25;
+  font-weight: 400;
+  color: #3b4045;
+  margin: 0;
+}
+
+.mvrt-resource-badge {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #662d91;
+}
+
+/* ==========================================================================
+   11. Contact Page (.contactform)
+   ========================================================================== */
+
+.mvrt-contactform-container {
+  max-width: 780px;
+  width: 88%;
+  margin: 24px auto 84px;
+  text-align: center;
+  border-radius: 6px;
+  background-color: #fafafa;
+  padding: 20px 24px 36px;
+}
+
+.mvrt-contactform-head h2 {
+  text-align: center;
+  padding: 18px 0;
+  margin: 0;
+  font-size: 21px;
+  font-weight: 400;
+  color: #000000;
+}
+
+.mvrt-contactform-input,
+.mvrt-contactform-textarea {
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 15px;
+  padding: 15px 12px 11px;
+  border: 1px solid #cecece;
+  background: #efefef;
+  color: #000000;
+  border-radius: 5px;
+  width: 80%;
+  max-width: 640px;
+  margin-bottom: 12px;
+  outline: none;
+}
+
+.mvrt-contactform-input:first-of-type {
+  margin-top: 24px;
+}
+
+.mvrt-contactform-textarea {
+  height: 110px;
+  resize: vertical;
+}
+
+.mvrt-contactform-btn {
+  margin-top: 15px;
+  margin-bottom: 10px;
+  background-color: #662d91;
+  padding: 12px 45px;
+  border-radius: 5px;
+  border: 1px solid #662d91;
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 15px;
+  color: #ffffff;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.mvrt-contactform-btn:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   12. Sponsors Page (.sponsorrow & .sponsorimg)
+   ========================================================================== */
+
+.mvrt-sponsors-section {
+  padding: 20px 0 84px;
+  text-align: center;
+}
+
+.mvrt-sponsors-heading {
+  color: #3c3c3c;
+  font-weight: 700;
+  font-size: 40px;
+  line-height: 44px;
+  margin: 10px 0 24px;
+}
+
+.mvrt-sponsor-rows {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 54px 72px;
+  padding: 36px 0 44px;
+}
+
+.mvrt-sponsor-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mvrt-sponsorimg {
+  transition: transform 0.2s ease;
+  height: 92px;
+  max-width: 260px;
+  object-fit: contain;
+  transform: scale(1);
+}
+
+.mvrt-sponsorimg:hover {
+  transform: scale(1.1);
+}
+
+.mvrt-sponsors-promo h3 {
+  font-size: 23px;
+  line-height: 30px;
+  font-weight: 300;
+  color: #3b4045;
+  margin: 16px 0 12px;
+}
+
+.mvrt-sponsors-links {
+  font-size: 20px;
+  font-weight: 300;
+  color: #3b4045;
+}
+
+/* ==========================================================================
+   13. Newsletters Page (4-Column .gallery Grid)
+   ========================================================================== */
+
+.mvrt-newsletters-wrapper {
+  width: 94%;
+  max-width: 1320px;
+  margin: 10px auto 84px;
+}
+
+.mvrt-newsletters-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px;
+  align-items: stretch;
+}
+
+.mvrt-gallery-card {
+  box-shadow: 0px 0px 28px 4px rgba(113, 100, 123, 0.36);
+  padding: 15px;
+  border-radius: 2px;
+  background: #ffffff;
+  text-decoration: none;
+  color: #444444;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.mvrt-gallery-card:hover {
+  box-shadow: 0px 0px 20px 5px #dab0ec;
+}
+
+.mvrt-gallery-card img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+}
+
+.mvrt-gallery-desc {
+  padding: 26px 18px 20px;
+  text-align: center;
+  width: 100%;
+}
+
+.mvrt-gallery-desc h4 {
+  font-size: 20px;
+  line-height: 24px;
+  font-weight: 400;
+  color: #662d91;
+  margin: 0 0 14px;
+}
+
+.mvrt-gallery-desc p {
+  font-size: 16.5px;
+  line-height: 23px;
+  font-weight: 300;
+  color: #666666;
+  margin: 0;
+}
+
+/* ==========================================================================
+   14. Join Page
+   ========================================================================== */
+
+.mvrt-join-intro {
+  font-size: 18px;
+  line-height: 25px;
+  font-weight: 300;
+  color: #3b4045;
+  margin: 0 0 28px;
+}
+
+.mvrt-faq-item {
+  margin-bottom: 22px;
+}
+
+.mvrt-faq-item h3 {
+  font-size: 23px;
+  line-height: 28px;
+  font-weight: 400;
+  color: #3b4045;
+  margin: 0 0 6px;
+}
+
+.mvrt-faq-item p {
+  margin: 0;
+}
+
+/* ==========================================================================
+   15. Global Footer
+   ========================================================================== */
+
+.mvrt-footer {
+  text-align: center;
+  background: #f4f4f4;
+  padding: 50px 0;
+}
+
+.mvrt-footer-logo {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.mvrt-footer-logo h1 {
+  font-size: 40px;
+  font-weight: 400;
+  font-family: 'Montserrat', sans-serif;
+  color: #662d91;
+  margin: 0;
+}
+
+.mvrt-socialmediabar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 28px;
+  margin: 22px 0 18px;
+}
+
+.mvrt-socialmediabar a {
+  color: #282828;
+  transition: transform 0.2s ease, color 0.2s ease;
+  display: inline-flex;
+}
+
+.mvrt-socialmediabar a:hover {
+  transform: scale(1.2);
+  color: #662d91;
+}
+
+.mvrt-copyright-text {
+  font-weight: 300;
+  font-size: 12px;
+  color: #888888;
+  letter-spacing: 3px;
+  margin: 12px 0 0;
+}
+
+.mvrt-copyright-text a {
+  color: #282828;
+  text-decoration: none;
+}
+
+/* ==========================================================================
+   16. Responsive Breakpoints (Media Queries & Container Queries for Studio)
+   ========================================================================== */
+
+@media (max-width: 960px) {
+  .mvrt-menubtn {
+    display: block;
+  }
+
+  .mvrt-nav-menu {
+    display: none;
+  }
+
+  .mvrt-nav-menu.opened {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 22px;
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: #ffffff;
+    z-index: 42;
+    margin: 0;
+    padding: 80px 24px 40px;
+  }
+
+  .mvrt-newsletters-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .mvrt-events-grid,
+  .mvrt-glance-row,
+  .mvrt-timeline-season-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .mvrt-program-item.float-left .mvrt-program-image-wrap,
+  .mvrt-program-item.float-right .mvrt-program-image-wrap {
+    float: none;
+    width: 100%;
+    margin: 0 0 18px;
+  }
+
+  .mvrt-bot-card {
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .mvrt-bot-card-info {
+    flex: 1 1 auto;
+  }
+
+  .mvrt-memberlist {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .mvrt-information-container {
+    width: 94%;
+    padding: 10px;
+  }
+}
+
+@container mvrt-root (max-width: 920px) {
+  .mvrt-menubtn {
+    display: block;
+  }
+
+  .mvrt-nav-menu {
+    display: none;
+  }
+
+  .mvrt-nav-menu.opened {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+    position: absolute;
+    top: 72px;
+    left: 0;
+    right: 0;
+    background-color: #ffffff;
+    box-shadow: 0 18px 36px rgba(0, 0, 0, 0.14);
+    z-index: 44;
+    margin: 0;
+    padding: 28px 20px 34px;
+    border-bottom: 2px solid #662d91;
+  }
+
+  .mvrt-navbar.is-home {
+    background-image: linear-gradient(
+      to right,
+      #ffffff 0%,
+      85%,
+      rgba(255, 255, 255, 0.7) 100%
+    );
+  }
+
+  .mvrt-hero-fade {
+    background-image: linear-gradient(
+      to right,
+      #ffffff 0%,
+      82%,
+      rgba(255, 255, 255, 0.25) 100%
+    );
+  }
+
+  .mvrt-newsletters-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .mvrt-events-grid,
+  .mvrt-glance-row,
+  .mvrt-timeline-season-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .mvrt-program-item.float-left .mvrt-program-image-wrap,
+  .mvrt-program-item.float-right .mvrt-program-image-wrap {
+    float: none;
+    width: 100%;
+    margin: 0 0 18px;
+  }
+
+  .mvrt-bot-card {
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .mvrt-bot-card-info {
+    flex: 1 1 auto;
+  }
+
+  .mvrt-memberlist {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .mvrt-information-container {
+    width: 95%;
+    padding: 10px;
+  }
+
+  .mvrt-resource-row {
+    flex-direction: column;
+  }
+
+  .mvrt-resource-thumb {
+    width: 100%;
+  }
+}
+
+@container mvrt-root (max-width: 540px) {
+  .mvrt-hero-title {
+    font-size: 42px;
+  }
+
+  .mvrt-header-secondary .mvrt-title {
+    font-size: 44px;
+  }
+
+  .mvrt-newsletters-grid,
+  .mvrt-memberlist {
+    grid-template-columns: 1fr;
+  }
+
+  .mvrt-info-content {
+    padding: 20px 18px 28px;
+  }
+
+  .mvrt-cta-input-group {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .mvrt-cta-input-group input,
+  .mvrt-cta-input-group .mvrt-btn-main {
+    border-radius: 30px;
+    width: 100%;
+  }
+}
+
+
+/* ==========================================================================
+   Direct On-Screen WYSIWYG Editing Controls (Only Active in Editor Mode)
+   ========================================================================== */
+
+.mvrt-inline-editable {
+  position: relative;
+  border-radius: 4px;
+  transition: outline 0.14s ease, background-color 0.14s ease;
+}
+
+.mvrt-edit-mode .mvrt-inline-editable {
+  cursor: text;
+  outline: 1.5px dashed transparent;
+  outline-offset: 3px;
+}
+
+.mvrt-edit-mode .mvrt-inline-editable:hover {
+  outline-color: rgba(102, 45, 145, 0.55);
+  background-color: rgba(102, 45, 145, 0.04);
+}
+
+.mvrt-edit-mode .mvrt-inline-editable.is-active-edit {
+  outline: 2px solid #7c3aed;
+  outline-offset: 4px;
+  background-color: rgba(124, 58, 237, 0.06);
+}
+
+.mvrt-inline-img-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.mvrt-edit-mode .mvrt-inline-img-clickable {
+  cursor: pointer;
+  transition: outline 0.16s ease, filter 0.16s ease;
+}
+
+.mvrt-edit-mode .mvrt-inline-img-clickable:hover {
+  outline: 3px solid #7c3aed;
+  outline-offset: 3px;
+  filter: brightness(0.95);
+}
+
+.mvrt-img-pick-badge {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(15, 15, 20, 0.88);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 11.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  z-index: 15;
+}
+
+.mvrt-inline-img-wrap:hover .mvrt-img-pick-badge {
+  opacity: 1;
+}
+
+/* On-Screen Contextual Action Pills (+ Add / Delete / Move) */
+.mvrt-onscreen-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #18181b;
+  color: #fafafa;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  transition: all 0.15s ease;
+  z-index: 20;
+}
+
+.mvrt-onscreen-pill:hover {
+  background: #662d91;
+  border-color: #a78bfa;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.mvrt-onscreen-pill.danger {
+  background: rgba(24, 24, 27, 0.9);
+  color: #fca5a5;
+  border-color: rgba(239, 68, 68, 0.35);
+  padding: 4px 8px;
+  font-size: 11px;
+}
+
+.mvrt-onscreen-pill.danger:hover {
+  background: #dc2626;
+  color: #ffffff;
+}
+
+/* Floating On-Screen Text Style & Link Toolbar */
+.mvrt-floating-text-toolbar {
+  position: fixed;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  background: #141418;
+  color: #fafafa;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 14px;
+  padding: 10px 14px;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.45);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: min(680px, 94vw);
+  font-family: 'Inter', -apple-system, sans-serif;
+}
+
+.mvrt-ft-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.mvrt-ft-label {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #a78bfa;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.mvrt-ft-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.mvrt-ft-btn {
+  background: #232329;
+  color: #f4f4f5;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 7px;
+  padding: 4px 9px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.mvrt-ft-btn:hover {
+  background: #32323b;
+}
+
+.mvrt-ft-btn.active {
+  background: #662d91;
+  border-color: #a78bfa;
+  color: #ffffff;
+}
+
+.mvrt-ft-swatch {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  cursor: pointer;
+  padding: 0;
+}
+
+.mvrt-ft-swatch.active {
+  border-color: #ffffff;
+  transform: scale(1.15);
+}
+
+.mvrt-ft-input {
+  width: 100%;
+  background: #0b0b0e;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 8px;
+  padding: 8px 11px;
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 13.5px;
+  outline: none;
+}
+
+.mvrt-ft-input:focus {
+  border-color: #a78bfa;
+}

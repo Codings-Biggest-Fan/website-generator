@@ -1,0 +1,307 @@
+/* ==========================================================================
+   MVRT Direct On-Screen Website Editor — Minimal Desktop App Shell
+   No sidebars, no clutter, only Editor & Preview modes + Folder Picker + GitHub Push
+   ========================================================================== */
+
+.mvrt-app-window {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background: #09090b;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Slim 46px Desktop App Bar */
+.mvrt-minimal-topbar {
+  height: 46px;
+  background: #0c0c0f;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  gap: 12px;
+  flex-shrink: 0;
+  z-index: 80;
+  user-select: none;
+}
+
+.mvrt-topbar-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Only 2 Modes: Editor | Preview */
+.mvrt-two-mode-switch {
+  display: inline-flex;
+  align-items: center;
+  background: #16161a;
+  padding: 3px;
+  border-radius: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  gap: 2px;
+}
+
+.mvrt-two-mode-btn {
+  background: transparent;
+  border: none;
+  color: #a1a1aa;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 5px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.14s ease;
+}
+
+.mvrt-two-mode-btn:hover {
+  color: #fafafa;
+}
+
+.mvrt-two-mode-btn.active {
+  background: #27272a;
+  color: #ffffff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+}
+
+/* Clean Topbar Buttons */
+.mvrt-top-btn {
+  background: #18181c;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  color: #e4e4e7;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.14s ease;
+}
+
+.mvrt-top-btn:hover {
+  background: #232329;
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+.mvrt-top-btn.primary {
+  background: #662d91;
+  border-color: #8b5cf6;
+  color: #ffffff;
+}
+
+.mvrt-top-btn.primary:hover {
+  background: #7c3aed;
+}
+
+.mvrt-top-btn.github {
+  background: #1f2937;
+  border-color: rgba(16, 185, 129, 0.4);
+  color: #ecfdf5;
+}
+
+.mvrt-top-btn.github:hover {
+  background: #065f46;
+  border-color: #34d399;
+}
+
+.mvrt-toast-pill {
+  background: rgba(16, 185, 129, 0.16);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #6ee7b7;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Full-Screen Canvas Container (Zero Sidebars) */
+.mvrt-fullscreen-canvas {
+  flex: 1;
+  overflow-y: auto;
+  background: #ffffff;
+  position: relative;
+}
+
+/* On-Screen Modal Backdrop */
+.mvrt-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.68);
+  backdrop-filter: blur(4px);
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.mvrt-modal-card {
+  background: #121216;
+  color: #fafafa;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 16px;
+  width: min(860px, 95vw);
+  max-height: 86vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
+}
+
+.mvrt-modal-card.compact {
+  width: min(520px, 95vw);
+}
+
+.mvrt-modal-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.mvrt-modal-header h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.mvrt-modal-toolbar {
+  padding: 12px 20px;
+  background: #0d0d10;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.mvrt-folder-tabs {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.mvrt-folder-tab {
+  background: #1a1a20;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #a1a1aa;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.mvrt-folder-tab.active {
+  background: #662d91;
+  border-color: #a78bfa;
+  color: #ffffff;
+}
+
+.mvrt-asset-grid {
+  padding: 18px 20px;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+  gap: 12px;
+}
+
+.mvrt-asset-tile {
+  background: #1a1a20;
+  border: 1.5px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  padding: 0;
+  color: #e4e4e7;
+  transition: all 0.15s ease;
+}
+
+.mvrt-asset-tile:hover {
+  border-color: #a78bfa;
+  transform: translateY(-2px);
+}
+
+.mvrt-asset-tile.selected {
+  border-color: #10b981;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.35);
+}
+
+.mvrt-asset-thumb {
+  width: 100%;
+  height: 104px;
+  background: #09090b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.mvrt-asset-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mvrt-asset-meta {
+  padding: 8px 10px;
+  font-size: 11px;
+  line-height: 1.3;
+  word-break: break-all;
+}
+
+.mvrt-modal-body {
+  padding: 18px 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.mvrt-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.mvrt-form-field label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #d4d4d8;
+}
+
+.mvrt-form-input {
+  background: #09090b;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 9px 12px;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 13px;
+  outline: none;
+}
+
+.mvrt-form-input:focus {
+  border-color: #a78bfa;
+}

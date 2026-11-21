@@ -1,69 +1,64 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MVRT Website Generator — Desktop App (FRC Team 115)</title>
-  <meta name="description" content="Download the MVRT Website Generator desktop app for Windows, macOS, and Linux. Built for Monta Vista Robotics Team (FRC 115)." />
-  <link rel="icon" href="https://mvrt.com/assets/favicons/bull_white.png" />
+  <title>MVRT Website Generator — Desktop Editor &amp; Static Site Tool</title>
+  <meta name="description" content="Desktop tool for editing mvrt.com content, managing events and assets, and publishing static builds to GitHub." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #f7f7f9;
-      --surface: #ffffff;
-      --ink: #18181b;
-      --ink-2: #52525b;
-      --ink-3: #71717a;
-      --line: #e4e4e7;
-      --line-strong: #d4d4d8;
-      --purple: #662d91;
-      --purple-hover: #532278;
-      --purple-tint: #f4eef9;
+      --bg: #0c0a10;
+      --surface: #14111b;
+      --surface-2: #1c1826;
+      --border: rgba(255, 255, 255, 0.09);
+      --border-strong: rgba(255, 255, 255, 0.16);
+      --text: #f3f1f7;
+      --text-muted: #a69fb5;
+      --accent: #8b5cf6;
+      --accent-hover: #7c3aed;
+      --accent-soft: rgba(139, 92, 246, 0.14);
+      --radius: 12px;
     }
 
-    * { box-sizing: border-box; }
-
-    html { scroll-behavior: smooth; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     body {
-      margin: 0;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background-color: var(--bg);
-      color: var(--ink);
-      line-height: 1.55;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
       -webkit-font-smoothing: antialiased;
     }
 
-    a { color: inherit; text-decoration: none; }
-
-    code {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.9em;
-      background: #f1f0f4;
-      padding: 2px 6px;
-      border-radius: 5px;
-      color: var(--purple);
+    a {
+      color: inherit;
+      text-decoration: none;
     }
 
-    .wrap {
-      width: 92%;
+    .container {
       max-width: 1120px;
       margin: 0 auto;
+      padding: 0 24px;
     }
 
     /* Header */
     header {
-      border-bottom: 1px solid var(--line);
-      background: rgba(247, 247, 249, 0.85);
-      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      background: rgba(12, 10, 16, 0.85);
+      backdrop-filter: blur(12px);
       position: sticky;
       top: 0;
-      z-index: 30;
+      z-index: 40;
     }
 
-    .nav-bar {
+    .nav-inner {
       height: 64px;
       display: flex;
       align-items: center;
@@ -72,569 +67,557 @@
     }
 
     .brand {
-      display: inline-flex;
-      align-items: baseline;
+      display: flex;
+      align-items: center;
       gap: 10px;
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: -0.01em;
     }
 
-    .brand-logo {
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 800;
-      font-size: 22px;
-      letter-spacing: -0.02em;
-      color: var(--purple);
-    }
-
-    .brand-tag {
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--ink-3);
+    .brand-mark {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      background: var(--accent-soft);
+      border: 1px solid rgba(139, 92, 246, 0.35);
+      display: grid;
+      place-items: center;
+      color: #c4b5fd;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 600;
     }
 
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 22px;
-      font-size: 13.5px;
-      font-weight: 500;
-      color: var(--ink-2);
+      gap: 12px;
     }
 
-    .nav-links a:hover { color: var(--ink); }
+    .nav-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 13px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      border: 1px solid transparent;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
 
-    /* Asymmetric Editorial Hero */
+    .nav-link:hover {
+      color: var(--text);
+      background: var(--surface);
+      border-color: var(--border);
+    }
+
+    /* Hero / Tool Summary */
     .hero {
-      padding: 64px 0 56px;
-      border-bottom: 1px solid var(--line);
+      padding: 64px 0 48px;
     }
 
     .hero-grid {
       display: grid;
-      grid-template-columns: 1fr 1.15fr;
-      gap: 48px;
+      grid-template-columns: 1fr 1.25fr;
+      gap: 40px;
       align-items: center;
-    }
-
-    .release-meta {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--purple);
-      background: var(--purple-tint);
-      border: 1px solid rgba(102, 45, 145, 0.18);
-      padding: 4px 11px;
-      border-radius: 6px;
-      margin-bottom: 18px;
     }
 
     .hero h1 {
-      font-family: 'Montserrat', sans-serif;
-      font-size: clamp(32px, 3.6vw, 46px);
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      line-height: 1.1;
-      margin: 0 0 16px;
-      color: var(--ink);
+      font-size: clamp(28px, 3.6vw, 40px);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1.15;
+      margin-bottom: 16px;
     }
 
     .hero p {
-      font-size: 16.5px;
-      color: var(--ink-2);
-      margin: 0 0 28px;
-      max-width: 460px;
+      color: var(--text-muted);
+      font-size: 15px;
+      margin-bottom: 24px;
+      max-width: 480px;
     }
 
     .hero-actions {
       display: flex;
-      align-items: center;
-      gap: 14px;
       flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
     }
 
     .btn-primary {
       display: inline-flex;
       align-items: center;
-      gap: 10px;
-      background: var(--purple);
+      gap: 9px;
+      background: var(--accent);
       color: #ffffff;
-      font-size: 14.5px;
-      font-weight: 600;
-      padding: 13px 24px;
+      padding: 11px 20px;
       border-radius: 9px;
-      transition: background 0.15s ease, transform 0.15s ease;
+      font-size: 14px;
+      font-weight: 600;
+      transition: background 0.15s;
     }
 
     .btn-primary:hover {
-      background: var(--purple-hover);
-      transform: translateY(-1px);
+      background: var(--accent-hover);
     }
 
     .btn-secondary {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       background: var(--surface);
-      color: var(--ink);
-      border: 1px solid var(--line-strong);
-      font-size: 14px;
-      font-weight: 600;
-      padding: 12px 18px;
+      color: var(--text);
+      padding: 11px 16px;
       border-radius: 9px;
-      transition: border-color 0.15s ease, background 0.15s ease;
+      font-size: 14px;
+      font-weight: 500;
+      border: 1px solid var(--border-strong);
+      transition: background 0.15s, border-color 0.15s;
     }
 
     .btn-secondary:hover {
-      border-color: var(--ink);
-      background: #fafafa;
+      background: var(--surface-2);
     }
 
-    .os-caption {
-      margin-top: 12px;
-      font-size: 12.5px;
-      color: var(--ink-3);
-    }
-
-    .hero-media {
+    .screenshot-frame {
       background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: 14px;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
       overflow: hidden;
-      box-shadow: 0 18px 45px rgba(24, 24, 27, 0.08);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
     }
 
-    .hero-media img {
+    .screenshot-bar {
+      height: 30px;
+      background: var(--surface-2);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      gap: 6px;
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-muted);
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.16);
+    }
+
+    .screenshot-frame img {
       display: block;
       width: 100%;
       height: auto;
-      object-fit: cover;
     }
 
-    /* Platform Downloads Matrix */
-    .downloads-section {
-      padding: 56px 0;
-      border-bottom: 1px solid var(--line);
+    /* Section Headings */
+    section {
+      padding: 48px 0;
+      border-top: 1px solid var(--border);
     }
 
     .section-head {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
+      margin-bottom: 28px;
     }
 
     .section-head h2 {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 24px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      margin: 0;
-    }
-
-    .os-tabs {
-      display: inline-flex;
-      background: #ededf0;
-      padding: 3px;
-      border-radius: 9px;
-      gap: 2px;
-    }
-
-    .os-tab {
-      background: transparent;
-      border: none;
-      padding: 6px 14px;
-      border-radius: 7px;
-      font-family: inherit;
-      font-size: 13px;
+      font-size: 22px;
       font-weight: 600;
-      color: var(--ink-2);
-      cursor: pointer;
+      letter-spacing: -0.015em;
+      margin-bottom: 6px;
     }
 
-    .os-tab.active {
-      background: var(--surface);
-      color: var(--ink);
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-    }
-
-    .matrix-table {
-      width: 100%;
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      border-collapse: separate;
-      border-spacing: 0;
-      overflow: hidden;
-    }
-
-    .matrix-table th,
-    .matrix-table td {
-      padding: 15px 20px;
-      text-align: left;
-      border-bottom: 1px solid var(--line);
+    .section-head p {
+      color: var(--text-muted);
       font-size: 14px;
+      max-width: 640px;
     }
 
-    .matrix-table tr:last-child td {
-      border-bottom: none;
-    }
-
-    .matrix-table th {
-      background: #fafafa;
-      font-size: 11.5px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--ink-3);
-    }
-
-    .matrix-table tr.hidden-row {
-      display: none;
-    }
-
-    .mono {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12.5px;
-      font-variant-numeric: tabular-nums;
-      color: var(--ink-2);
-    }
-
-    .row-dl {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--purple);
-      padding: 6px 12px;
-      border-radius: 7px;
-      border: 1px solid rgba(102, 45, 145, 0.24);
-      background: var(--purple-tint);
-      transition: all 0.14s ease;
-    }
-
-    .row-dl:hover {
-      background: var(--purple);
-      color: #ffffff;
-      border-color: var(--purple);
-    }
-
-    /* 3-Step Workflow Strip */
-    .workflow-section {
-      padding: 56px 0;
-    }
-
-    .workflow-grid {
+    /* Downloads Grid */
+    .downloads-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      border: 1px solid var(--line);
-      border-radius: 12px;
+      gap: 16px;
+    }
+
+    .dl-card {
       background: var(--surface);
-      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 16px;
     }
 
-    .workflow-cell {
-      padding: 26px 28px;
-      border-right: 1px solid var(--line);
+    .dl-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
     }
 
-    .workflow-cell:last-child {
-      border-right: none;
+    .dl-os {
+      font-size: 16px;
+      font-weight: 600;
     }
 
-    .step-num {
+    .dl-ext {
       font-family: 'JetBrains Mono', monospace;
       font-size: 12px;
-      font-weight: 600;
-      color: var(--purple);
-      margin-bottom: 8px;
+      color: var(--text-muted);
+      background: var(--surface-2);
+      padding: 3px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
     }
 
-    .workflow-cell h3 {
-      font-size: 16px;
-      font-weight: 700;
-      margin: 0 0 6px;
-    }
-
-    .workflow-cell p {
-      margin: 0;
-      font-size: 13.5px;
-      color: var(--ink-2);
-    }
-
-    footer {
-      border-top: 1px solid var(--line);
-      padding: 28px 0;
+    .dl-desc {
       font-size: 13px;
-      color: var(--ink-3);
+      color: var(--text-muted);
     }
 
-    .footer-row {
-      display: flex;
-      justify-content: space-between;
+    .dl-btn {
+      display: inline-flex;
       align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 9px 14px;
+      border-radius: 8px;
+      background: var(--surface-2);
+      border: 1px solid var(--border-strong);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .dl-btn:hover {
+      background: rgba(139, 92, 246, 0.16);
+      border-color: rgba(139, 92, 246, 0.45);
+    }
+
+    /* Walkthrough Screenshots */
+    .walkthrough-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .walkthrough-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .walkthrough-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .walkthrough-body {
+      padding: 18px 20px;
+    }
+
+    .walkthrough-body h3 {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .walkthrough-body p {
+      font-size: 13.5px;
+      color: var(--text-muted);
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 0;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       flex-wrap: wrap;
       gap: 12px;
     }
 
+    .footer-links {
+      display: flex;
+      gap: 18px;
+    }
+
+    .footer-links a:hover {
+      color: var(--text);
+    }
+
     @media (max-width: 880px) {
-      .hero-grid {
+      .hero-grid,
+      .downloads-grid,
+      .walkthrough-grid {
         grid-template-columns: 1fr;
-        gap: 32px;
-      }
-      .workflow-grid {
-        grid-template-columns: 1fr;
-      }
-      .workflow-cell {
-        border-right: none;
-        border-bottom: 1px solid var(--line);
-      }
-      .workflow-cell:last-child {
-        border-bottom: none;
-      }
-      .matrix-table th:nth-child(3),
-      .matrix-table td:nth-child(3) {
-        display: none;
       }
     }
   </style>
 </head>
 <body>
   <header>
-    <div class="wrap nav-bar">
+    <div class="container nav-inner">
       <a href="#" class="brand">
-        <span class="brand-logo">MVRT</span>
-        <span class="brand-tag">Website Generator</span>
+        <span class="brand-mark">115</span>
+        <span>MVRT Website Generator</span>
       </a>
-      <nav class="nav-links">
-        <a href="#downloads">Downloads</a>
-        <a href="https://mvrt.com" target="_blank" rel="noopener">mvrt.com</a>
-        <a href="https://github.com/Codings-Biggest-Fan/website-generator" target="_blank" rel="noopener">Source</a>
-        <a href="https://github.com/Codings-Biggest-Fan/website-generator/releases" target="_blank" rel="noopener">Releases</a>
+      <nav class="nav-links" aria-label="Primary">
+        <a
+          class="nav-link"
+          href="https://github.com/Codings-Biggest-Fan/website-generator"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          <span>Source</span>
+        </a>
+        <a
+          class="nav-link"
+          href="https://github.com/Codings-Biggest-Fan/website-generator/releases"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          <span>Releases</span>
+        </a>
       </nav>
     </div>
   </header>
 
-  <main class="wrap">
-    <!-- Editorial Split Hero -->
-    <section class="hero">
-      <div class="hero-grid">
+  <main>
+    <section class="hero" style="border-top: none;">
+      <div class="container hero-grid">
         <div>
-          <div class="release-meta" id="release-pill">v1.0.0 &bull; Windows, macOS &amp; Linux</div>
-          <h1>Maintain mvrt.com without touching HTML.</h1>
+          <h1>MVRT Website Generator</h1>
           <p>
-            A visual desktop editor built for Monta Vista Robotics Team (FRC 115). Sign in with GitHub to sync <code>mvrt-115/mvrt-115.github.io</code>, edit text, photos, and calendar events on screen, and push to a dated branch.
+            Desktop application for updating Monta Vista Robotics Team 115 website content. Edit pages, schedules, rosters, robot binders, sponsors, and assets in a live preview, then export a static site bundle or commit directly to GitHub.
           </p>
           <div class="hero-actions">
             <a
-              id="primary-dl-btn"
+              id="primary-download-btn"
               class="btn-primary"
-              href="https://github.com/Codings-Biggest-Fan/website-generator/releases/download/v1.0.0/MVRT-Website-Generator-Setup-1.0.0.exe"
+              href="https://github.com/Codings-Biggest-Fan/website-generator/releases/latest"
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                 <polyline points="7 10 12 15 17 10" />
                 <line x1="12" y1="15" x2="12" y2="3" />
               </svg>
-              <span id="primary-dl-label">Download for Windows</span>
+              <span id="primary-download-label">Download Latest Release</span>
             </a>
-            <a href="#downloads" class="btn-secondary">All platforms</a>
-          </div>
-          <div class="os-caption" id="os-caption">
-            Windows 10/11 (64-bit) &bull; Portable &amp; macOS/Linux builds below
+            <a
+              class="btn-secondary"
+              href="https://github.com/Codings-Biggest-Fan/website-generator"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View Repository
+            </a>
           </div>
         </div>
 
-        <div class="hero-media">
+        <div class="screenshot-frame">
+          <div class="screenshot-bar">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span style="margin-left: 6px;">Editor — Home Page</span>
+          </div>
           <img
-            src="assets/hero-showcase.jpg"
-            alt="MVRT Website Generator desktop app showing the MVRT site, robot showcase, and calendar"
+            src="./assets/app-editor-home.png"
+            alt="MVRT Website Generator live editor showing the top toolbar, GitHub sync controls, and inline hero editing."
           />
         </div>
       </div>
     </section>
 
-    <!-- Clean Platform Matrix -->
-    <section class="downloads-section" id="downloads">
-      <div class="section-head">
-        <h2>Platform Downloads</h2>
-        <div class="os-tabs" role="tablist">
-          <button type="button" class="os-tab active" data-filter="all">All OS</button>
-          <button type="button" class="os-tab" data-filter="win">Windows</button>
-          <button type="button" class="os-tab" data-filter="mac">macOS</button>
-          <button type="button" class="os-tab" data-filter="linux">Linux</button>
+    <section id="downloads">
+      <div class="container">
+        <div class="section-head">
+          <h2>Installers &amp; Packages</h2>
+          <p>
+            Download the desktop build for your operating system from GitHub Releases, or clone the repository to run locally with Vite and Electron.
+          </p>
+        </div>
+
+        <div class="downloads-grid">
+          <div class="dl-card">
+            <div>
+              <div class="dl-card-top">
+                <span class="dl-os">Windows</span>
+                <span class="dl-ext">.exe</span>
+              </div>
+              <p class="dl-desc" style="margin-top: 8px;">
+                Portable executable and NSIS installer for 64-bit Windows.
+              </p>
+            </div>
+            <a
+              id="win-download-btn"
+              class="dl-btn"
+              href="https://github.com/Codings-Biggest-Fan/website-generator/releases/latest"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Download for Windows
+            </a>
+          </div>
+
+          <div class="dl-card">
+            <div>
+              <div class="dl-card-top">
+                <span class="dl-os">macOS</span>
+                <span class="dl-ext">.dmg</span>
+              </div>
+              <p class="dl-desc" style="margin-top: 8px;">
+                Universal macOS disk image supporting Apple Silicon and Intel.
+              </p>
+            </div>
+            <a
+              id="mac-download-btn"
+              class="dl-btn"
+              href="https://github.com/Codings-Biggest-Fan/website-generator/releases/latest"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Download for macOS
+            </a>
+          </div>
+
+          <div class="dl-card">
+            <div>
+              <div class="dl-card-top">
+                <span class="dl-os">Linux</span>
+                <span class="dl-ext">.AppImage / .deb</span>
+              </div>
+              <p class="dl-desc" style="margin-top: 8px;">
+                AppImage and Debian package for 64-bit Linux distributions.
+              </p>
+            </div>
+            <a
+              id="linux-download-btn"
+              class="dl-btn"
+              href="https://github.com/Codings-Biggest-Fan/website-generator/releases/latest"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Download for Linux
+            </a>
+          </div>
         </div>
       </div>
-
-      <table class="matrix-table">
-        <thead>
-          <tr>
-            <th>Operating System</th>
-            <th>Package</th>
-            <th>Architecture</th>
-            <th style="text-align: right;">Download</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr data-os="win">
-            <td><strong>Windows</strong></td>
-            <td>Setup Installer (<code>.exe</code>)</td>
-            <td class="mono">x64</td>
-            <td style="text-align: right;">
-              <a class="row-dl" id="dl-win-setup" href="https://github.com/Codings-Biggest-Fan/website-generator/releases/download/v1.0.0/MVRT-Website-Generator-Setup-1.0.0.exe">Download</a>
-            </td>
-          </tr>
-          <tr data-os="win">
-            <td><strong>Windows</strong></td>
-            <td>Portable Executable (<code>.exe</code>)</td>
-            <td class="mono">x64</td>
-            <td style="text-align: right;">
-              <a class="row-dl" id="dl-win-portable" href="https://github.com/Codings-Biggest-Fan/website-generator/releases/download/v1.0.0/MVRT-Website-Generator-1.0.0.exe">Download</a>
-            </td>
-          </tr>
-          <tr data-os="mac">
-            <td><strong>macOS</strong></td>
-            <td>Apple Silicon Disk Image (<code>.dmg</code>)</td>
-            <td class="mono">arm64 (M1–M4)</td>
-            <td style="text-align: right;">
-              <a class="row-dl" id="dl-mac-arm64" href="https://github.com/Codings-Biggest-Fan/website-generator/releases/download/v1.0.0/MVRT-Website-Generator-1.0.0-arm64.dmg">Download</a>
-            </td>
-          </tr>
-          <tr data-os="mac">
-            <td><strong>macOS</strong></td>
-            <td>Intel Disk Image (<code>.dmg</code>)</td>
-            <td class="mono">x64</td>
-            <td style="text-align: right;">
-              <a class="row-dl" id="dl-mac-x64" href="https://github.com/Codings-Biggest-Fan/website-generator/releases/download/v1.0.0/MVRT-Website-Generator-1.0.0.dmg">Download</a>
-            </td>
-          </tr>
-          <tr data-os="linux">
-            <td><strong>Linux</strong></td>
-            <td>Universal AppImage (<code>.AppImage</code>)</td>
-            <td class="mono">x64</td>
-            <td style="text-align: right;">
-              <a class="row-dl" id="dl-linux-appimage" href="https://github.com/Codings-Biggest-Fan/website-generator/releases/download/v1.0.0/MVRT-Website-Generator-1.0.0.AppImage">Download</a>
-            </td>
-          </tr>
-          <tr data-os="linux">
-            <td><strong>Linux</strong></td>
-            <td>Ubuntu / Debian Package (<code>.deb</code>)</td>
-            <td class="mono">amd64</td>
-            <td style="text-align: right;">
-              <a class="row-dl" id="dl-linux-deb" href="https://github.com/Codings-Biggest-Fan/website-generator/releases/download/v1.0.0/website-generator_1.0.0_amd64.deb">Download</a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
     </section>
 
-    <!-- 3-Step Workflow -->
-    <section class="workflow-section">
-      <div class="workflow-grid">
-        <div class="workflow-cell">
-          <div class="step-num">01 / SYNC</div>
-          <h3>Sign in with GitHub</h3>
-          <p>Automatically pulls events, content, and <code>assets/</code> from <code>mvrt-115/mvrt-115.github.io</code>.</p>
+    <section id="screenshots">
+      <div class="container">
+        <div class="section-head">
+          <h2>How the Tool Works</h2>
+          <p>
+            Every page on the site is stored in a structured JSON file (<code>site-data/mvrt-site.json</code>) and edited directly inside the preview.
+          </p>
         </div>
-        <div class="workflow-cell">
-          <div class="step-num">02 / EDIT</div>
-          <h3>Click directly on screen</h3>
-          <p>Edit copy, adjust font sizes, add events on the Calendar, or pick photos from your local <code>assets/</code> folder.</p>
-        </div>
-        <div class="workflow-cell">
-          <div class="step-num">03 / PUBLISH</div>
-          <h3>Dated Branch or .ZIP</h3>
-          <p>Push all 9 generated HTML pages &amp; JSON to a dated branch (<code>update-YYYY-MM-DD</code>) or export a <code>.zip</code>.</p>
+
+        <div class="walkthrough-grid">
+          <article class="walkthrough-card">
+            <img
+              src="./assets/app-calendar-sync.png"
+              alt="Merged interactive monthly calendar and Google Calendar view inside MVRT Website Generator."
+            />
+            <div class="walkthrough-body">
+              <h3>Calendar &amp; Google Calendar Sync</h3>
+              <p>
+                Click any date cell on the monthly grid to add or edit events, sync individual events directly to Google Calendar, and keep the embedded team calendar URL up to date on the same page.
+              </p>
+            </div>
+          </article>
+
+          <article class="walkthrough-card">
+            <img
+              src="./assets/app-mentors-editor.png"
+              alt="About page mentors editor with add and remove controls for each mentor tier."
+            />
+            <div class="walkthrough-body">
+              <h3>Structured Roster, History &amp; Assets</h3>
+              <p>
+                Add or remove mentors, team history years, leadership entries, past robots, technical binder PDFs, sponsor promo notes, and footer links without touching HTML or CSS files.
+              </p>
+            </div>
+          </article>
         </div>
       </div>
     </section>
   </main>
 
   <footer>
-    <div class="wrap footer-row">
-      <span>Monta Vista Robotics Team (FRC Team 115) &bull; Cupertino, CA</span>
-      <a href="https://github.com/Codings-Biggest-Fan/website-generator/releases/latest" target="_blank" rel="noopener">View Release Notes &rarr;</a>
+    <div class="container footer-inner">
+      <span>MVRT Website Generator</span>
+      <div class="footer-links">
+        <a href="https://github.com/Codings-Biggest-Fan/website-generator" target="_blank" rel="noopener noreferrer">Source</a>
+        <a href="https://github.com/Codings-Biggest-Fan/website-generator/releases" target="_blank" rel="noopener noreferrer">Releases</a>
+      </div>
     </div>
   </footer>
 
   <script>
-    (function () {
-      const ua = navigator.userAgent.toLowerCase();
-      const primaryBtn = document.getElementById('primary-dl-btn');
-      const primaryLabel = document.getElementById('primary-dl-label');
-      const caption = document.getElementById('os-caption');
+    (async function resolveLatestRelease() {
+      try {
+        const res = await fetch('https://api.github.com/repos/Codings-Biggest-Fan/website-generator/releases/latest');
+        if (!res.ok) return;
+        const release = await res.json();
+        const assets = Array.isArray(release.assets) ? release.assets : [];
 
-      let os = 'win';
-      if (ua.includes('mac')) os = 'mac';
-      else if (ua.includes('linux')) os = 'linux';
+        const winAsset = assets.find((a) => /\.exe$/i.test(a.name));
+        const macAsset = assets.find((a) => /\.dmg$/i.test(a.name));
+        const linuxAsset = assets.find((a) => /\.(AppImage|deb)$/i.test(a.name));
 
-      function applyPrimary(links) {
-        if (os === 'mac') {
-          primaryBtn.href = links.macArm64;
-          primaryLabel.textContent = 'Download for macOS (.dmg)';
-          caption.textContent = 'Apple Silicon (M1–M4) • Intel .dmg & Windows/Linux builds below';
-        } else if (os === 'linux') {
-          primaryBtn.href = links.linuxAppImage;
-          primaryLabel.textContent = 'Download for Linux (.AppImage)';
-          caption.textContent = 'Linux x64 • .deb package & Windows/macOS builds below';
-        } else {
-          primaryBtn.href = links.winSetup;
-          primaryLabel.textContent = 'Download for Windows (.exe)';
-          caption.textContent = 'Windows 10/11 (64-bit) • Portable .exe & macOS/Linux builds below';
+        if (winAsset) document.getElementById('win-download-btn').href = winAsset.browser_download_url;
+        if (macAsset) document.getElementById('mac-download-btn').href = macAsset.browser_download_url;
+        if (linuxAsset) document.getElementById('linux-download-btn').href = linuxAsset.browser_download_url;
+
+        const ua = navigator.userAgent.toLowerCase();
+        const primaryBtn = document.getElementById('primary-download-btn');
+        const primaryLabel = document.getElementById('primary-download-label');
+        if (ua.includes('win') && winAsset) {
+          primaryBtn.href = winAsset.browser_download_url;
+          primaryLabel.textContent = 'Download for Windows';
+        } else if (ua.includes('mac') && macAsset) {
+          primaryBtn.href = macAsset.browser_download_url;
+          primaryLabel.textContent = 'Download for macOS';
+        } else if (ua.includes('linux') && linuxAsset) {
+          primaryBtn.href = linuxAsset.browser_download_url;
+          primaryLabel.textContent = 'Download for Linux';
         }
+      } catch {
+        // Fallback links already point to GitHub Releases latest
       }
-
-      const fallbackLinks = {
-        winSetup: document.getElementById('dl-win-setup').href,
-        winPortable: document.getElementById('dl-win-portable').href,
-        macArm64: document.getElementById('dl-mac-arm64').href,
-        macX64: document.getElementById('dl-mac-x64').href,
-        linuxAppImage: document.getElementById('dl-linux-appimage').href,
-        linuxDeb: document.getElementById('dl-linux-deb').href
-      };
-      applyPrimary(fallbackLinks);
-
-      // OS filter tabs
-      document.querySelectorAll('.os-tab').forEach((tab) => {
-        tab.addEventListener('click', () => {
-          document.querySelectorAll('.os-tab').forEach((t) => t.classList.remove('active'));
-          tab.classList.add('active');
-          const filter = tab.getAttribute('data-filter');
-          document.querySelectorAll('.matrix-table tbody tr').forEach((row) => {
-            const match = filter === 'all' || row.getAttribute('data-os') === filter;
-            row.classList.toggle('hidden-row', !match);
-          });
-        });
-      });
-
-      // Auto-update links from GitHub latest release
-      fetch('https://api.github.com/repos/Codings-Biggest-Fan/website-generator/releases/latest')
-        .then((r) => (r.ok ? r.json() : null))
-        .then((rel) => {
-          if (!rel || !Array.isArray(rel.assets)) return;
-          document.getElementById('release-pill').textContent = (rel.tag_name || 'v1.0.0') + ' • Windows, macOS & Linux';
-          const findAsset = (re) => rel.assets.find((a) => re.test(a.name))?.browser_download_url;
-          const updated = {
-            winSetup: findAsset(/Setup.*\.exe$/i) || fallbackLinks.winSetup,
-            winPortable: findAsset(/^MVRT-Website-Generator-[\d.]+\.exe$/i) || fallbackLinks.winPortable,
-            macArm64: findAsset(/arm64\.dmg$/i) || fallbackLinks.macArm64,
-            macX64: findAsset(/^MVRT-Website-Generator-[\d.]+\.dmg$/i) || fallbackLinks.macX64,
-            linuxAppImage: findAsset(/\.AppImage$/i) || fallbackLinks.linuxAppImage,
-            linuxDeb: findAsset(/\.deb$/i) || fallbackLinks.linuxDeb
-          };
-          document.getElementById('dl-win-setup').href = updated.winSetup;
-          document.getElementById('dl-win-portable').href = updated.winPortable;
-          document.getElementById('dl-mac-arm64').href = updated.macArm64;
-          document.getElementById('dl-mac-x64').href = updated.macX64;
-          document.getElementById('dl-linux-appimage').href = updated.linuxAppImage;
-          document.getElementById('dl-linux-deb').href = updated.linuxDeb;
-          applyPrimary(updated);
-        })
-        .catch(() => {});
     })();
   </script>
 </body>

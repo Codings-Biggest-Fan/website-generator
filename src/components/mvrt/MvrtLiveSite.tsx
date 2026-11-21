@@ -260,10 +260,7 @@ export const MvrtLiveSite: React.FC<MvrtLiveSiteProps> = ({
   const [showBulkMembersModal, setShowBulkMembersModal] = useState(false);
   const [bulkMembersDraft, setBulkMembersDraft] = useState('');
 
-  // Interactive Calendar State (View Mode + Displayed Month + Add/Edit Event Modal)
-  const [calendarViewMode, setCalendarViewMode] = useState<
-    'interactive' | 'google'
-  >('interactive');
+  // Interactive Calendar State (Displayed Month + Add/Edit Event Modal)
   const [calYear, setCalYear] = useState<number>(() => {
     const firstIso = data.eventsConfig.items.find((e) => e.isoDate)?.isoDate;
     if (firstIso) return Number(firstIso.slice(0, 4)) || new Date().getFullYear();
@@ -2542,39 +2539,101 @@ export const MvrtLiveSite: React.FC<MvrtLiveSiteProps> = ({
                   >
                     {data.aboutOverview.missionParagraph}
                   </p>
-                  <h2>Team Goals</h2>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      gap: 10
+                    }}
+                  >
+                    <h2>Team Goals</h2>
+                    {showEditOverlays && (
+                      <button
+                        type="button"
+                        className="mvrt-onscreen-pill"
+                        onClick={() =>
+                          mutateData((prev) => ({
+                            ...prev,
+                            aboutOverview: {
+                              ...prev.aboutOverview,
+                              goalsList: [
+                                ...prev.aboutOverview.goalsList,
+                                'New team goal — click to edit.'
+                              ]
+                            }
+                          }))
+                        }
+                      >
+                        <Plus size={12} />
+                        <span>Add Goal</span>
+                      </button>
+                    )}
+                  </div>
                   <ul className="mvrt-goals-list">
                     {data.aboutOverview.goalsList.map((goal, idx) => (
                       <li
                         key={idx}
-                        className={`mvrt-inline-editable ${
-                          activeTextSel?.styleKey === `about-goal-${idx}`
-                            ? 'is-active-edit'
-                            : ''
-                        }`}
-                        style={getCustomStyle(`about-goal-${idx}`)}
-                        onClick={() => {
-                          if (!showEditOverlays) return;
-                          setActiveTextSel({
-                            styleKey: `about-goal-${idx}`,
-                            label: `Team Goal #${idx + 1}`,
-                            defaultSize: 18,
-                            getText: (d) =>
-                              d.aboutOverview.goalsList[idx] || '',
-                            setText: (val) =>
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          gap: 10
+                        }}
+                      >
+                        <span
+                          className={`mvrt-inline-editable ${
+                            activeTextSel?.styleKey === `about-goal-${idx}`
+                              ? 'is-active-edit'
+                              : ''
+                          }`}
+                          style={{
+                            flex: 1,
+                            ...getCustomStyle(`about-goal-${idx}`)
+                          }}
+                          onClick={() => {
+                            if (!showEditOverlays) return;
+                            setActiveTextSel({
+                              styleKey: `about-goal-${idx}`,
+                              label: `Team Goal #${idx + 1}`,
+                              defaultSize: 18,
+                              getText: (d) =>
+                                d.aboutOverview.goalsList[idx] || '',
+                              setText: (val) =>
+                                mutateData((prev) => ({
+                                  ...prev,
+                                  aboutOverview: {
+                                    ...prev.aboutOverview,
+                                    goalsList: prev.aboutOverview.goalsList.map(
+                                      (g, i) => (i === idx ? val : g)
+                                    )
+                                  }
+                                }))
+                            });
+                          }}
+                        >
+                          {goal}
+                        </span>
+                        {showEditOverlays && (
+                          <button
+                            type="button"
+                            className="mvrt-onscreen-pill danger"
+                            onClick={() =>
                               mutateData((prev) => ({
                                 ...prev,
                                 aboutOverview: {
                                   ...prev.aboutOverview,
-                                  goalsList: prev.aboutOverview.goalsList.map(
-                                    (g, i) => (i === idx ? val : g)
+                                  goalsList: prev.aboutOverview.goalsList.filter(
+                                    (_, i) => i !== idx
                                   )
                                 }
                               }))
-                          });
-                        }}
-                      >
-                        {goal}
+                            }
+                            title="Delete Goal"
+                          >
+                            <Trash2 size={11} />
+                          </button>
+                        )}
                       </li>
                     ))}
                   </ul>
@@ -2783,9 +2842,70 @@ export const MvrtLiveSite: React.FC<MvrtLiveSiteProps> = ({
                       <div className="mvrt-timeline-event-content">
                         <div className="mvrt-timeline-season-layout">
                           <div>
-                            <h2 className="mvrt-timeline-year-heading">
-                              {activeTimelineSeason.year}
-                            </h2>
+                            <div
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                gap: 10
+                              }}
+                            >
+                              <h2
+                                className={`mvrt-timeline-year-heading mvrt-inline-editable`}
+                                style={{ margin: 0 }}
+                                onClick={() => {
+                                  if (!showEditOverlays) return;
+                                  setActiveTextSel({
+                                    styleKey: `hist-year-${activeTimelineSeason.year}`,
+                                    label: 'Season Year',
+                                    defaultSize: 32,
+                                    getText: () =>
+                                      String(activeTimelineSeason.year),
+                                    setText: (val) => {
+                                      const yr = Number(val);
+                                      if (!yr || yr < 1995 || yr > 2100) return;
+                                      mutateData((prev) => ({
+                                        ...prev,
+                                        seasons: prev.seasons.map((s) =>
+                                          s.year === activeTimelineSeason.year
+                                            ? { ...s, year: yr }
+                                            : s
+                                        )
+                                      }));
+                                      setSelectedTimelineYear(yr);
+                                    }
+                                  });
+                                }}
+                              >
+                                {activeTimelineSeason.year}
+                              </h2>
+                              {showEditOverlays && data.seasons.length > 1 && (
+                                <button
+                                  type="button"
+                                  className="mvrt-onscreen-pill danger"
+                                  onClick={() => {
+                                    const remaining = data.seasons.filter(
+                                      (s) =>
+                                        s.year !== activeTimelineSeason.year
+                                    );
+                                    mutateData((prev) => ({
+                                      ...prev,
+                                      seasons: remaining
+                                    }));
+                                    if (remaining[0]) {
+                                      setSelectedTimelineYear(
+                                        remaining[0].year
+                                      );
+                                    }
+                                  }}
+                                >
+                                  <Trash2 size={11} />
+                                  <span>
+                                    Delete {activeTimelineSeason.year}
+                                  </span>
+                                </button>
+                              )}
+                            </div>
                             <em
                               className={`mvrt-timeline-game-em mvrt-inline-editable ${
                                 activeTextSel?.styleKey ===
@@ -2827,45 +2947,83 @@ export const MvrtLiveSite: React.FC<MvrtLiveSiteProps> = ({
                               {activeTimelineSeason.awards.map((aw, i) => (
                                 <li
                                   key={i}
-                                  className={`mvrt-inline-editable ${
-                                    activeTextSel?.styleKey ===
-                                    `hist-aw-${activeTimelineSeason.year}-${i}`
-                                      ? 'is-active-edit'
-                                      : ''
-                                  }`}
-                                  style={getCustomStyle(
-                                    `hist-aw-${activeTimelineSeason.year}-${i}`
-                                  )}
-                                  onClick={() => {
-                                    if (!showEditOverlays) return;
-                                    setActiveTextSel({
-                                      styleKey: `hist-aw-${activeTimelineSeason.year}-${i}`,
-                                      label: `Award #${i + 1}`,
-                                      defaultSize: 17,
-                                      getText: (d) =>
-                                        d.seasons.find(
-                                          (s) =>
-                                            s.year === activeTimelineSeason.year
-                                        )?.awards[i] || '',
-                                      setText: (val) =>
+                                  style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    gap: 8
+                                  }}
+                                >
+                                  <span
+                                    className={`mvrt-inline-editable ${
+                                      activeTextSel?.styleKey ===
+                                      `hist-aw-${activeTimelineSeason.year}-${i}`
+                                        ? 'is-active-edit'
+                                        : ''
+                                    }`}
+                                    style={{
+                                      flex: 1,
+                                      ...getCustomStyle(
+                                        `hist-aw-${activeTimelineSeason.year}-${i}`
+                                      )
+                                    }}
+                                    onClick={() => {
+                                      if (!showEditOverlays) return;
+                                      setActiveTextSel({
+                                        styleKey: `hist-aw-${activeTimelineSeason.year}-${i}`,
+                                        label: `Award #${i + 1}`,
+                                        defaultSize: 17,
+                                        getText: (d) =>
+                                          d.seasons.find(
+                                            (s) =>
+                                              s.year ===
+                                              activeTimelineSeason.year
+                                          )?.awards[i] || '',
+                                        setText: (val) =>
+                                          mutateData((prev) => ({
+                                            ...prev,
+                                            seasons: prev.seasons.map((s) =>
+                                              s.year ===
+                                              activeTimelineSeason.year
+                                                ? {
+                                                    ...s,
+                                                    awards: s.awards.map(
+                                                      (a, idx) =>
+                                                        idx === i ? val : a
+                                                    )
+                                                  }
+                                                : s
+                                            )
+                                          }))
+                                      });
+                                    }}
+                                  >
+                                    {aw}
+                                  </span>
+                                  {showEditOverlays && (
+                                    <button
+                                      type="button"
+                                      className="mvrt-onscreen-pill danger"
+                                      onClick={() =>
                                         mutateData((prev) => ({
                                           ...prev,
                                           seasons: prev.seasons.map((s) =>
                                             s.year === activeTimelineSeason.year
                                               ? {
                                                   ...s,
-                                                  awards: s.awards.map(
-                                                    (a, idx) =>
-                                                      idx === i ? val : a
+                                                  awards: s.awards.filter(
+                                                    (_, idx) => idx !== i
                                                   )
                                                 }
                                               : s
                                           )
                                         }))
-                                    });
-                                  }}
-                                >
-                                  {aw}
+                                      }
+                                      title="Delete Award"
+                                    >
+                                      <Trash2 size={10} />
+                                    </button>
+                                  )}
                                 </li>
                               ))}
                             </ul>
@@ -2900,48 +3058,112 @@ export const MvrtLiveSite: React.FC<MvrtLiveSiteProps> = ({
                               {activeTimelineSeason.leadership.map((ld, i) => (
                                 <li
                                   key={i}
-                                  className={`mvrt-inline-editable ${
-                                    activeTextSel?.styleKey ===
-                                    `hist-ld-${activeTimelineSeason.year}-${i}`
-                                      ? 'is-active-edit'
-                                      : ''
-                                  }`}
-                                  style={getCustomStyle(
-                                    `hist-ld-${activeTimelineSeason.year}-${i}`
-                                  )}
-                                  onClick={() => {
-                                    if (!showEditOverlays) return;
-                                    setActiveTextSel({
-                                      styleKey: `hist-ld-${activeTimelineSeason.year}-${i}`,
-                                      label: `Leader #${i + 1}`,
-                                      defaultSize: 17,
-                                      getText: (d) =>
-                                        d.seasons.find(
-                                          (s) =>
-                                            s.year === activeTimelineSeason.year
-                                        )?.leadership[i] || '',
-                                      setText: (val) =>
+                                  style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    gap: 8
+                                  }}
+                                >
+                                  <span
+                                    className={`mvrt-inline-editable ${
+                                      activeTextSel?.styleKey ===
+                                      `hist-ld-${activeTimelineSeason.year}-${i}`
+                                        ? 'is-active-edit'
+                                        : ''
+                                    }`}
+                                    style={{
+                                      flex: 1,
+                                      ...getCustomStyle(
+                                        `hist-ld-${activeTimelineSeason.year}-${i}`
+                                      )
+                                    }}
+                                    onClick={() => {
+                                      if (!showEditOverlays) return;
+                                      setActiveTextSel({
+                                        styleKey: `hist-ld-${activeTimelineSeason.year}-${i}`,
+                                        label: `Leader #${i + 1}`,
+                                        defaultSize: 17,
+                                        getText: (d) =>
+                                          d.seasons.find(
+                                            (s) =>
+                                              s.year ===
+                                              activeTimelineSeason.year
+                                          )?.leadership[i] || '',
+                                        setText: (val) =>
+                                          mutateData((prev) => ({
+                                            ...prev,
+                                            seasons: prev.seasons.map((s) =>
+                                              s.year ===
+                                              activeTimelineSeason.year
+                                                ? {
+                                                    ...s,
+                                                    leadership: s.leadership.map(
+                                                      (l, idx) =>
+                                                        idx === i ? val : l
+                                                    )
+                                                  }
+                                                : s
+                                            )
+                                          }))
+                                      });
+                                    }}
+                                  >
+                                    {ld}
+                                  </span>
+                                  {showEditOverlays && (
+                                    <button
+                                      type="button"
+                                      className="mvrt-onscreen-pill danger"
+                                      onClick={() =>
                                         mutateData((prev) => ({
                                           ...prev,
                                           seasons: prev.seasons.map((s) =>
                                             s.year === activeTimelineSeason.year
                                               ? {
                                                   ...s,
-                                                  leadership: s.leadership.map(
-                                                    (l, idx) =>
-                                                      idx === i ? val : l
-                                                  )
+                                                  leadership:
+                                                    s.leadership.filter(
+                                                      (_, idx) => idx !== i
+                                                    )
                                                 }
                                               : s
                                           )
                                         }))
-                                    });
-                                  }}
-                                >
-                                  {ld}
+                                      }
+                                      title="Delete Leader"
+                                    >
+                                      <Trash2 size={10} />
+                                    </button>
+                                  )}
                                 </li>
                               ))}
                             </ul>
+                            {showEditOverlays && (
+                              <button
+                                type="button"
+                                className="mvrt-onscreen-pill"
+                                onClick={() =>
+                                  mutateData((prev) => ({
+                                    ...prev,
+                                    seasons: prev.seasons.map((s) =>
+                                      s.year === activeTimelineSeason.year
+                                        ? {
+                                            ...s,
+                                            leadership: [
+                                              ...s.leadership,
+                                              'Name - Role'
+                                            ]
+                                          }
+                                        : s
+                                    )
+                                  }))
+                                }
+                              >
+                                <Plus size={12} />
+                                <span>Add Leadership</span>
+                              </button>
+                            )}
                           </div>
 
                           <div>
@@ -3005,15 +3227,102 @@ export const MvrtLiveSite: React.FC<MvrtLiveSiteProps> = ({
               {/* TAB 4: Past Robots (.bot-card rows) */}
               {aboutTab === 'robots' && (
                 <div>
-                  <h1>Past Robots</h1>
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      flexWrap: 'wrap',
+                      gap: 10
+                    }}
+                  >
+                    <h1>Past Robots</h1>
+                    {showEditOverlays && (
+                      <button
+                        type="button"
+                        className="mvrt-onscreen-pill"
+                        onClick={() => {
+                          const nextYear =
+                            (pastRobotsList[0]?.year || 2026) + 1;
+                          mutateData((prev) => ({
+                            ...prev,
+                            seasons: [
+                              {
+                                year: nextYear,
+                                game: 'NEW FRC GAME',
+                                robotName: `El Toro ${nextYear - 1997}`,
+                                robotImage:
+                                  'assets/images/robot-images/mvrt2026.jpg',
+                                showInPastRobots: true,
+                                awards: ['New Season Award'],
+                                leadership: ['New Season Leadership']
+                              },
+                              ...prev.seasons
+                            ]
+                          }));
+                        }}
+                      >
+                        <Plus size={12} />
+                        <span>Add Robot / Year</span>
+                      </button>
+                    )}
+                  </div>
                   <hr className="mvrt-content-hr" />
                   <p>A look back at our robots throughout the years.</p>
 
                   <div>
                     {pastRobotsList.map((season) => (
-                      <div key={season.year} className="mvrt-bot-card">
+                      <div
+                        key={season.year}
+                        className="mvrt-bot-card"
+                        style={{ position: 'relative' }}
+                      >
+                        {showEditOverlays && (
+                          <button
+                            type="button"
+                            className="mvrt-onscreen-pill danger"
+                            style={{ position: 'absolute', top: 14, right: 14 }}
+                            onClick={() =>
+                              mutateData((prev) => ({
+                                ...prev,
+                                seasons: prev.seasons.map((s) =>
+                                  s.year === season.year
+                                    ? { ...s, showInPastRobots: false }
+                                    : s
+                                )
+                              }))
+                            }
+                            title={`Remove ${season.year} from Past Robots`}
+                          >
+                            <Trash2 size={11} />
+                            <span>Delete {season.year}</span>
+                          </button>
+                        )}
                         <div className="mvrt-bot-card-info">
-                          <div className="mvrt-bot-card-year">
+                          <div
+                            className={`mvrt-bot-card-year mvrt-inline-editable`}
+                            onClick={() => {
+                              if (!showEditOverlays) return;
+                              setActiveTextSel({
+                                styleKey: `bot-year-${season.year}`,
+                                label: 'Robot Season Year',
+                                defaultSize: 30,
+                                getText: () => String(season.year),
+                                setText: (val) => {
+                                  const yr = Number(val);
+                                  if (!yr || yr < 1995 || yr > 2100) return;
+                                  mutateData((prev) => ({
+                                    ...prev,
+                                    seasons: prev.seasons.map((s) =>
+                                      s.year === season.year
+                                        ? { ...s, year: yr }
+                                        : s
+                                    )
+                                  }));
+                                }
+                              });
+                            }}
+                          >
                             {season.year} Season:
                           </div>
                           <span
@@ -3126,15 +3435,22 @@ export const MvrtLiveSite: React.FC<MvrtLiveSiteProps> = ({
                               Technical Binder
                             </a>
                           )}
-                          {showEditOverlays && !season.technicalBinderUrl && (
-                            <div style={{ marginTop: 10 }}>
+                          {showEditOverlays && (
+                            <div
+                              style={{
+                                marginTop: 10,
+                                display: 'flex',
+                                gap: 6,
+                                flexWrap: 'wrap'
+                              }}
+                            >
                               <button
                                 type="button"
                                 className="mvrt-onscreen-pill"
                                 onClick={() =>
                                   pickPdf(
                                     `${season.year} Technical Binder PDF`,
-                                    '',
+                                    season.technicalBinderUrl || '',
                                     'files',
                                     (newPdf) =>
                                       mutateData((prev) => ({
@@ -3152,8 +3468,64 @@ export const MvrtLiveSite: React.FC<MvrtLiveSiteProps> = ({
                                 }
                               >
                                 <FolderOpen size={12} />
-                                <span>Attach Binder PDF from Assets</span>
+                                <span>
+                                  {season.technicalBinderUrl
+                                    ? 'Edit / Pick Binder PDF'
+                                    : 'Attach Binder PDF'}
+                                </span>
                               </button>
+                              <button
+                                type="button"
+                                className="mvrt-onscreen-pill"
+                                onClick={() =>
+                                  setActiveTextSel({
+                                    styleKey: `robot-binder-url-${season.year}`,
+                                    label: `${season.year} Technical Binder URL`,
+                                    defaultSize: 14,
+                                    getText: (d) =>
+                                      d.seasons.find(
+                                        (s) => s.year === season.year
+                                      )?.technicalBinderUrl || '',
+                                    setText: (val) =>
+                                      mutateData((prev) => ({
+                                        ...prev,
+                                        seasons: prev.seasons.map((s) =>
+                                          s.year === season.year
+                                            ? {
+                                                ...s,
+                                                technicalBinderUrl: val
+                                              }
+                                            : s
+                                        )
+                                      }))
+                                  })
+                                }
+                              >
+                                <Link2 size={12} />
+                                <span>Binder URL</span>
+                              </button>
+                              {season.technicalBinderUrl && (
+                                <button
+                                  type="button"
+                                  className="mvrt-onscreen-pill danger"
+                                  onClick={() =>
+                                    mutateData((prev) => ({
+                                      ...prev,
+                                      seasons: prev.seasons.map((s) =>
+                                        s.year === season.year
+                                          ? {
+                                              ...s,
+                                              technicalBinderUrl: undefined
+                                            }
+                                          : s
+                                      )
+                                    }))
+                                  }
+                                >
+                                  <Trash2 size={11} />
+                                  <span>Remove Binder</span>
+                                </button>
+                              )}
                             </div>
                           )}
                         </div>
@@ -3441,12 +3813,49 @@ export const MvrtLiveSite: React.FC<MvrtLiveSiteProps> = ({
                     {data.mentors.introText}
                   </p>
 
-                  <h2 className="mvrt-mentor-tier-title">Head Mentors</h2>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      gap: 10,
+                      flexWrap: 'wrap'
+                    }}
+                  >
+                    <h2 className="mvrt-mentor-tier-title">Head Mentors</h2>
+                    {showEditOverlays && (
+                      <button
+                        type="button"
+                        className="mvrt-onscreen-pill"
+                        onClick={() =>
+                          mutateData((prev) => ({
+                            ...prev,
+                            mentors: {
+                              ...prev.mentors,
+                              headMentors: [
+                                ...prev.mentors.headMentors,
+                                'New Head Mentor'
+                              ]
+                            }
+                          }))
+                        }
+                      >
+                        <Plus size={12} />
+                        <span>Add Head Mentor</span>
+                      </button>
+                    )}
+                  </div>
                   <ul className="mvrt-memberlist">
                     {data.mentors.headMentors.map((m, i) => (
                       <li
                         key={i}
                         className="mvrt-inline-editable"
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          gap: 8
+                        }}
                         onClick={() => {
                           if (!showEditOverlays) return;
                           setActiveTextSel({
@@ -3467,17 +3876,75 @@ export const MvrtLiveSite: React.FC<MvrtLiveSiteProps> = ({
                           });
                         }}
                       >
-                        {m}
+                        <span>{m}</span>
+                        {showEditOverlays && (
+                          <button
+                            type="button"
+                            className="mvrt-onscreen-pill danger"
+                            title="Remove mentor"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              mutateData((prev) => ({
+                                ...prev,
+                                mentors: {
+                                  ...prev.mentors,
+                                  headMentors: prev.mentors.headMentors.filter(
+                                    (_, idx) => idx !== i
+                                  )
+                                }
+                              }));
+                            }}
+                          >
+                            <Trash2 size={11} />
+                          </button>
+                        )}
                       </li>
                     ))}
                   </ul>
 
-                  <h2 className="mvrt-mentor-tier-title">Current Mentors</h2>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      gap: 10,
+                      flexWrap: 'wrap'
+                    }}
+                  >
+                    <h2 className="mvrt-mentor-tier-title">Current Mentors</h2>
+                    {showEditOverlays && (
+                      <button
+                        type="button"
+                        className="mvrt-onscreen-pill"
+                        onClick={() =>
+                          mutateData((prev) => ({
+                            ...prev,
+                            mentors: {
+                              ...prev.mentors,
+                              currentMentors: [
+                                ...prev.mentors.currentMentors,
+                                'New Mentor'
+                              ]
+                            }
+                          }))
+                        }
+                      >
+                        <Plus size={12} />
+                        <span>Add Current Mentor</span>
+                      </button>
+                    )}
+                  </div>
                   <ul className="mvrt-memberlist">
                     {data.mentors.currentMentors.map((m, i) => (
                       <li
                         key={i}
                         className="mvrt-inline-editable"
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          gap: 8
+                        }}
                         onClick={() => {
                           if (!showEditOverlays) return;
                           setActiveTextSel({
@@ -3499,17 +3966,76 @@ export const MvrtLiveSite: React.FC<MvrtLiveSiteProps> = ({
                           });
                         }}
                       >
-                        {m}
+                        <span>{m}</span>
+                        {showEditOverlays && (
+                          <button
+                            type="button"
+                            className="mvrt-onscreen-pill danger"
+                            title="Remove mentor"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              mutateData((prev) => ({
+                                ...prev,
+                                mentors: {
+                                  ...prev.mentors,
+                                  currentMentors:
+                                    prev.mentors.currentMentors.filter(
+                                      (_, idx) => idx !== i
+                                    )
+                                }
+                              }));
+                            }}
+                          >
+                            <Trash2 size={11} />
+                          </button>
+                        )}
                       </li>
                     ))}
                   </ul>
 
-                  <h2 className="mvrt-mentor-tier-title">Past Mentors</h2>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      gap: 10,
+                      flexWrap: 'wrap'
+                    }}
+                  >
+                    <h2 className="mvrt-mentor-tier-title">Past Mentors</h2>
+                    {showEditOverlays && (
+                      <button
+                        type="button"
+                        className="mvrt-onscreen-pill"
+                        onClick={() =>
+                          mutateData((prev) => ({
+                            ...prev,
+                            mentors: {
+                              ...prev.mentors,
+                              pastMentors: [
+                                ...prev.mentors.pastMentors,
+                                'New Past Mentor'
+                              ]
+                            }
+                          }))
+                        }
+                      >
+                        <Plus size={12} />
+                        <span>Add Past Mentor</span>
+                      </button>
+                    )}
+                  </div>
                   <ul className="mvrt-memberlist">
                     {data.mentors.pastMentors.map((m, i) => (
                       <li
                         key={i}
                         className="mvrt-inline-editable"
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          gap: 8
+                        }}
                         onClick={() => {
                           if (!showEditOverlays) return;
                           setActiveTextSel({
@@ -3530,7 +4056,28 @@ export const MvrtLiveSite: React.FC<MvrtLiveSiteProps> = ({
                           });
                         }}
                       >
-                        {m}
+                        <span>{m}</span>
+                        {showEditOverlays && (
+                          <button
+                            type="button"
+                            className="mvrt-onscreen-pill danger"
+                            title="Remove mentor"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              mutateData((prev) => ({
+                                ...prev,
+                                mentors: {
+                                  ...prev.mentors,
+                                  pastMentors: prev.mentors.pastMentors.filter(
+                                    (_, idx) => idx !== i
+                                  )
+                                }
+                              }));
+                            }}
+                          >
+                            <Trash2 size={11} />
+                          </button>
+                        )}
                       </li>
                     ))}
                   </ul>
@@ -3814,27 +4361,6 @@ export const MvrtLiveSite: React.FC<MvrtLiveSiteProps> = ({
                     flexWrap: 'wrap'
                   }}
                 >
-                  <div className="mvrt-cal-view-switch">
-                    <button
-                      type="button"
-                      className={`mvrt-cal-view-btn ${
-                        calendarViewMode === 'interactive' ? 'active' : ''
-                      }`}
-                      onClick={() => setCalendarViewMode('interactive')}
-                    >
-                      Interactive Calendar
-                    </button>
-                    <button
-                      type="button"
-                      className={`mvrt-cal-view-btn ${
-                        calendarViewMode === 'google' ? 'active' : ''
-                      }`}
-                      onClick={() => setCalendarViewMode('google')}
-                    >
-                      Google Calendar
-                    </button>
-                  </div>
-
                   {showEditOverlays && (
                     <button
                       type="button"
@@ -3846,7 +4372,7 @@ export const MvrtLiveSite: React.FC<MvrtLiveSiteProps> = ({
                     </button>
                   )}
 
-                  {showEditOverlays && calendarViewMode === 'google' && (
+                  {showEditOverlays && (
                     <button
                       type="button"
                       className="mvrt-onscreen-pill"
@@ -3865,7 +4391,7 @@ export const MvrtLiveSite: React.FC<MvrtLiveSiteProps> = ({
                       }
                     >
                       <Link2 size={12} />
-                      <span>Edit Embed URL</span>
+                      <span>Edit Google Calendar URL</span>
                     </button>
                   )}
                 </div>
@@ -3883,13 +4409,12 @@ export const MvrtLiveSite: React.FC<MvrtLiveSiteProps> = ({
                   let us know
                 </button>
                 !{' '}
-                {showEditOverlays && calendarViewMode === 'interactive'
-                  ? 'Click any date cell below to add an event, or click an event pill to edit it.'
-                  : 'The calendar is best viewed on a computer.'}
+                {showEditOverlays
+                  ? 'Click any date cell below to add an event, click an event pill to edit it, or use Sync to Google Calendar on any event.'
+                  : 'Click any event below to add it to your Google Calendar, or browse the embedded team calendar.'}
               </p>
 
-              {calendarViewMode === 'interactive' ? (
-                <div>
+              <div>
                   {/* Month Navigation Bar */}
                   <div className="mvrt-cal-month-bar">
                     <div className="mvrt-cal-nav-group">
@@ -4116,13 +4641,35 @@ export const MvrtLiveSite: React.FC<MvrtLiveSiteProps> = ({
                               {ev.location}
                             </p>
                           )}
+                          <div style={{ marginTop: 10 }}>
+                            <a
+                              href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
+                                ev.title
+                              )}${
+                                ev.isoDate
+                                  ? `&dates=${ev.isoDate.replace(/-/g, '')}/${ev.isoDate.replace(/-/g, '')}`
+                                  : ''
+                              }&details=${encodeURIComponent(
+                                ev.dateText || ''
+                              )}&location=${encodeURIComponent(ev.location || '')}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="mvrt-link-inline"
+                              style={{ fontSize: 12 }}
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              Sync to Google Calendar
+                            </a>
+                          </div>
                         </div>
                       ))}
                     </div>
                   </div>
                 </div>
-              ) : (
-                /* Embedded Google Calendar Iframe */
+
+              {/* Embedded Google Calendar Iframe (always shown below interactive grid) */}
+              <div style={{ marginTop: 36 }}>
+                <h2 style={{ marginBottom: 12 }}>Google Calendar</h2>
                 <div className="mvrt-calendar-aspect aspect4by3 calendar-embed-wrapper">
                   <iframe
                     src={data.meta.calendarEmbedUrl}
@@ -4133,7 +4680,7 @@ export const MvrtLiveSite: React.FC<MvrtLiveSiteProps> = ({
                     title="Monta Vista Robotics Team 115 Google Calendar"
                   />
                 </div>
-              )}
+              </div>
             </div>
           </div>
         </main>
@@ -4404,6 +4951,56 @@ export const MvrtLiveSite: React.FC<MvrtLiveSiteProps> = ({
             <div className="mvrt-contactform-head">
               <h2>Contact Us Here</h2>
             </div>
+            {showEditOverlays && (
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: 10,
+                  flexWrap: 'wrap',
+                  padding: '10px 14px',
+                  marginBottom: 14,
+                  background: '#f8f5fc',
+                  border: '1px solid #d9c7ea',
+                  borderRadius: 6
+                }}
+              >
+                <span style={{ fontSize: 13, color: '#444' }}>
+                  Form Destination:{' '}
+                  <strong>{data.meta.contactFormEndpoint}</strong>
+                </span>
+                <button
+                  type="button"
+                  className="mvrt-onscreen-pill"
+                  onClick={() =>
+                    setActiveTextSel({
+                      styleKey: 'contact-form-endpoint',
+                      label: 'Contact Recipient Email or Formspree URL',
+                      defaultSize: 16,
+                      getText: (d) => d.meta.contactFormEndpoint,
+                      setText: (val) => {
+                        const trimmed = val.trim();
+                        const nextEndpoint =
+                          trimmed.includes('@') && !trimmed.startsWith('http')
+                            ? `https://formsubmit.co/${trimmed}`
+                            : trimmed;
+                        mutateData((prev) => ({
+                          ...prev,
+                          meta: {
+                            ...prev.meta,
+                            contactFormEndpoint: nextEndpoint
+                          }
+                        }));
+                      }
+                    })
+                  }
+                >
+                  <Link2 size={12} />
+                  <span>Change Recipient Email / Form URL</span>
+                </button>
+              </div>
+            )}
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -4665,13 +5262,17 @@ export const MvrtLiveSite: React.FC<MvrtLiveSiteProps> = ({
                       ? 'is-active-edit'
                       : ''
                   }`}
-                  style={getCustomStyle('sponsors-promo')}
+                  style={{
+                    ...getCustomStyle('sponsors-promo'),
+                    whiteSpace: 'pre-line'
+                  }}
                   onClick={() => {
                     if (!showEditOverlays) return;
                     setActiveTextSel({
                       styleKey: 'sponsors-promo',
-                      label: 'Promo Discount Banner',
+                      label: 'Promo Discount / Callout Text',
                       defaultSize: 22,
+                      multiline: true,
                       getText: (d) => d.sponsorsPage.promoBannerText,
                       setText: (val) =>
                         mutateData((prev) => ({
@@ -4684,8 +5285,47 @@ export const MvrtLiveSite: React.FC<MvrtLiveSiteProps> = ({
                     });
                   }}
                 >
-                  {data.sponsorsPage.promoBannerText}
+                  {data.sponsorsPage.promoBannerText ||
+                    (showEditOverlays
+                      ? 'Click to add promo code or callout text...'
+                      : '')}
                 </h3>
+                {showEditOverlays && (
+                  <div
+                    style={{
+                      display: 'flex',
+                      gap: 8,
+                      justifyContent: 'center',
+                      flexWrap: 'wrap',
+                      marginBottom: 12
+                    }}
+                  >
+                    <button
+                      type="button"
+                      className="mvrt-onscreen-pill"
+                      onClick={() =>
+                        setActiveTextSel({
+                          styleKey: 'sponsors-promo',
+                          label: 'Promo Discount / Callout Text',
+                          defaultSize: 22,
+                          multiline: true,
+                          getText: (d) => d.sponsorsPage.promoBannerText,
+                          setText: (val) =>
+                            mutateData((prev) => ({
+                              ...prev,
+                              sponsorsPage: {
+                                ...prev.sponsorsPage,
+                                promoBannerText: val
+                              }
+                            }))
+                        })
+                      }
+                    >
+                      <Plus size={12} />
+                      <span>Edit / Add Promo Text</span>
+                    </button>
+                  </div>
+                )}
                 <div className="mvrt-sponsors-links">
                   <a
                     href={resolveAssetUrl(
@@ -4743,6 +5383,108 @@ export const MvrtLiveSite: React.FC<MvrtLiveSiteProps> = ({
                     Sponsor Packet &nbsp;|
                   </a>
                 </div>
+                {showEditOverlays && (
+                  <div
+                    style={{
+                      display: 'flex',
+                      gap: 8,
+                      justifyContent: 'center',
+                      flexWrap: 'wrap',
+                      marginTop: 10
+                    }}
+                  >
+                    <button
+                      type="button"
+                      className="mvrt-onscreen-pill"
+                      onClick={() =>
+                        pickPdf(
+                          'Grant Impact Report PDF',
+                          data.sponsorsPage.grantImpactReportUrl,
+                          'files',
+                          (newPdf) =>
+                            mutateData((prev) => ({
+                              ...prev,
+                              sponsorsPage: {
+                                ...prev.sponsorsPage,
+                                grantImpactReportUrl: newPdf
+                              }
+                            }))
+                        )
+                      }
+                    >
+                      <FolderOpen size={12} />
+                      <span>Pick Grant Impact PDF</span>
+                    </button>
+                    <button
+                      type="button"
+                      className="mvrt-onscreen-pill"
+                      onClick={() =>
+                        setActiveTextSel({
+                          styleKey: 'grant-impact-url',
+                          label: 'Grant Impact Report URL',
+                          defaultSize: 14,
+                          getText: (d) => d.sponsorsPage.grantImpactReportUrl,
+                          setText: (val) =>
+                            mutateData((prev) => ({
+                              ...prev,
+                              sponsorsPage: {
+                                ...prev.sponsorsPage,
+                                grantImpactReportUrl: val
+                              }
+                            }))
+                        })
+                      }
+                    >
+                      <Link2 size={12} />
+                      <span>Grant Impact URL</span>
+                    </button>
+                    <button
+                      type="button"
+                      className="mvrt-onscreen-pill"
+                      onClick={() =>
+                        pickPdf(
+                          'Sponsor Packet PDF',
+                          data.sponsorsPage.sponsorPacketUrl,
+                          'files',
+                          (newPdf) =>
+                            mutateData((prev) => ({
+                              ...prev,
+                              sponsorsPage: {
+                                ...prev.sponsorsPage,
+                                sponsorPacketUrl: newPdf
+                              }
+                            }))
+                        )
+                      }
+                    >
+                      <FolderOpen size={12} />
+                      <span>Pick Sponsor Packet PDF</span>
+                    </button>
+                    <button
+                      type="button"
+                      className="mvrt-onscreen-pill"
+                      onClick={() =>
+                        setActiveTextSel({
+                          styleKey: 'sponsor-packet-url',
+                          label: 'Sponsor Packet URL',
+                          defaultSize: 14,
+                          getText: (d) => d.sponsorsPage.sponsorPacketUrl,
+                          setText: (val) =>
+                            mutateData((prev) => ({
+                              ...prev,
+                              sponsorsPage: {
+                                ...prev.sponsorsPage,
+                                sponsorPacketUrl: val
+                              }
+                            }))
+                        })
+                      }
+                    >
+                      <Link2 size={12} />
+                      <span>Sponsor Packet URL</span>
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </section>
@@ -5175,12 +5917,53 @@ export const MvrtLiveSite: React.FC<MvrtLiveSiteProps> = ({
                           rel="noopener noreferrer"
                           className="mvrt-link-inline"
                           onClick={(e) => {
-                            if (showEditOverlays) e.preventDefault();
+                            if (showEditOverlays) {
+                              e.preventDefault();
+                              setActiveTextSel({
+                                styleKey: 'join-interest-form-url',
+                                label: 'Google Interest Form URL',
+                                defaultSize: 16,
+                                getText: (d) => d.meta.interestFormUrl,
+                                setText: (url) =>
+                                  mutateData((prev) => ({
+                                    ...prev,
+                                    meta: { ...prev.meta, interestFormUrl: url }
+                                  }))
+                              });
+                            }
                           }}
                         >
                           interest form
                         </a>
                         !
+                        {showEditOverlays && (
+                          <span style={{ marginLeft: 10 }}>
+                            <button
+                              type="button"
+                              className="mvrt-onscreen-pill"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setActiveTextSel({
+                                  styleKey: 'join-interest-form-url',
+                                  label: 'Google Interest Form URL',
+                                  defaultSize: 16,
+                                  getText: (d) => d.meta.interestFormUrl,
+                                  setText: (url) =>
+                                    mutateData((prev) => ({
+                                      ...prev,
+                                      meta: {
+                                        ...prev.meta,
+                                        interestFormUrl: url
+                                      }
+                                    }))
+                                });
+                              }}
+                            >
+                              <Link2 size={12} />
+                              <span>Edit Interest Form Link</span>
+                            </button>
+                          </span>
+                        )}
                       </>
                     ) : (
                       data.joinPage.closedSeasonBody
@@ -5351,8 +6134,26 @@ export const MvrtLiveSite: React.FC<MvrtLiveSiteProps> = ({
         <div className="mvrt-container">
           <button
             type="button"
-            className="mvrt-footer-logo"
-            onClick={() => handleNavigate('home')}
+            className={`mvrt-footer-logo ${
+              showEditOverlays ? 'mvrt-inline-editable' : ''
+            }`}
+            onClick={() => {
+              if (showEditOverlays) {
+                setActiveTextSel({
+                  styleKey: 'footer-short-name',
+                  label: 'Footer Short Name / Logo Text',
+                  defaultSize: 22,
+                  getText: (d) => d.meta.shortName || 'MVRT',
+                  setText: (val) =>
+                    mutateData((prev) => ({
+                      ...prev,
+                      meta: { ...prev.meta, shortName: val }
+                    }))
+                });
+              } else {
+                handleNavigate('home');
+              }
+            }}
           >
             {data.meta.shortName || 'MVRT'}
           </button>
@@ -5363,6 +6164,25 @@ export const MvrtLiveSite: React.FC<MvrtLiveSiteProps> = ({
               target="_blank"
               rel="noopener noreferrer"
               title="Check out our Instagram"
+              onClick={(e) => {
+                if (showEditOverlays) {
+                  e.preventDefault();
+                  setActiveTextSel({
+                    styleKey: 'footer-ig',
+                    label: 'Instagram URL',
+                    defaultSize: 14,
+                    getText: (d) => d.meta.socials.instagram,
+                    setText: (val) =>
+                      mutateData((prev) => ({
+                        ...prev,
+                        meta: {
+                          ...prev.meta,
+                          socials: { ...prev.meta.socials, instagram: val }
+                        }
+                      }))
+                  });
+                }
+              }}
             >
               <svg
                 width="30"
@@ -5382,6 +6202,25 @@ export const MvrtLiveSite: React.FC<MvrtLiveSiteProps> = ({
               target="_blank"
               rel="noopener noreferrer"
               title="Check out our Facebook"
+              onClick={(e) => {
+                if (showEditOverlays) {
+                  e.preventDefault();
+                  setActiveTextSel({
+                    styleKey: 'footer-fb',
+                    label: 'Facebook URL',
+                    defaultSize: 14,
+                    getText: (d) => d.meta.socials.facebook,
+                    setText: (val) =>
+                      mutateData((prev) => ({
+                        ...prev,
+                        meta: {
+                          ...prev.meta,
+                          socials: { ...prev.meta.socials, facebook: val }
+                        }
+                      }))
+                  });
+                }
+              }}
             >
               <svg
                 width="30"
@@ -5399,6 +6238,25 @@ export const MvrtLiveSite: React.FC<MvrtLiveSiteProps> = ({
               target="_blank"
               rel="noopener noreferrer"
               title="Check out our Twitter"
+              onClick={(e) => {
+                if (showEditOverlays) {
+                  e.preventDefault();
+                  setActiveTextSel({
+                    styleKey: 'footer-tw',
+                    label: 'Twitter / X URL',
+                    defaultSize: 14,
+                    getText: (d) => d.meta.socials.twitter,
+                    setText: (val) =>
+                      mutateData((prev) => ({
+                        ...prev,
+                        meta: {
+                          ...prev.meta,
+                          socials: { ...prev.meta.socials, twitter: val }
+                        }
+                      }))
+                  });
+                }
+              }}
             >
               <svg
                 width="30"
@@ -5416,6 +6274,25 @@ export const MvrtLiveSite: React.FC<MvrtLiveSiteProps> = ({
               target="_blank"
               rel="noopener noreferrer"
               title="Check out our YouTube Channel"
+              onClick={(e) => {
+                if (showEditOverlays) {
+                  e.preventDefault();
+                  setActiveTextSel({
+                    styleKey: 'footer-yt',
+                    label: 'YouTube URL',
+                    defaultSize: 14,
+                    getText: (d) => d.meta.socials.youtube,
+                    setText: (val) =>
+                      mutateData((prev) => ({
+                        ...prev,
+                        meta: {
+                          ...prev.meta,
+                          socials: { ...prev.meta.socials, youtube: val }
+                        }
+                      }))
+                  });
+                }
+              }}
             >
               <svg
                 width="30"
@@ -5432,7 +6309,49 @@ export const MvrtLiveSite: React.FC<MvrtLiveSiteProps> = ({
           </div>
 
           <p className="mvrt-copyright-text">
-            {data.meta.copyrightYear} &copy; {data.meta.teamName}
+            <span
+              className={showEditOverlays ? 'mvrt-inline-editable' : ''}
+              onClick={() => {
+                if (!showEditOverlays) return;
+                setActiveTextSel({
+                  styleKey: 'footer-year',
+                  label: 'Copyright Year',
+                  defaultSize: 14,
+                  getText: (d) => String(d.meta.copyrightYear),
+                  setText: (val) =>
+                    mutateData((prev) => ({
+                      ...prev,
+                      meta: {
+                        ...prev.meta,
+                        copyrightYear:
+                          parseInt(val, 10) || prev.meta.copyrightYear
+                      }
+                    }))
+                });
+              }}
+            >
+              {data.meta.copyrightYear}
+            </span>{' '}
+            &copy;{' '}
+            <span
+              className={showEditOverlays ? 'mvrt-inline-editable' : ''}
+              onClick={() => {
+                if (!showEditOverlays) return;
+                setActiveTextSel({
+                  styleKey: 'footer-team-name',
+                  label: 'Footer Team Name',
+                  defaultSize: 14,
+                  getText: (d) => d.meta.teamName,
+                  setText: (val) =>
+                    mutateData((prev) => ({
+                      ...prev,
+                      meta: { ...prev.meta, teamName: val }
+                    }))
+                });
+              }}
+            >
+              {data.meta.teamName}
+            </span>
           </p>
           <p className="mvrt-copyright-text">
             Made with{' '}
@@ -5441,10 +6360,51 @@ export const MvrtLiveSite: React.FC<MvrtLiveSiteProps> = ({
               target="_blank"
               rel="noopener noreferrer"
               className="mvrt-heart-link"
+              onClick={(e) => {
+                if (showEditOverlays) {
+                  e.preventDefault();
+                  setActiveTextSel({
+                    styleKey: 'footer-heart-url',
+                    label: 'Heart Easter Egg URL',
+                    defaultSize: 14,
+                    getText: (d) => d.meta.socials.heartEasterEggUrl,
+                    setText: (val) =>
+                      mutateData((prev) => ({
+                        ...prev,
+                        meta: {
+                          ...prev.meta,
+                          socials: {
+                            ...prev.meta.socials,
+                            heartEasterEggUrl: val
+                          }
+                        }
+                      }))
+                  });
+                }
+              }}
             >
               <Heart size={13} fill="currentColor" />
             </a>{' '}
-            in {data.meta.location}
+            in{' '}
+            <span
+              className={showEditOverlays ? 'mvrt-inline-editable' : ''}
+              onClick={() => {
+                if (!showEditOverlays) return;
+                setActiveTextSel({
+                  styleKey: 'footer-location',
+                  label: 'Footer Location',
+                  defaultSize: 14,
+                  getText: (d) => d.meta.location,
+                  setText: (val) =>
+                    mutateData((prev) => ({
+                      ...prev,
+                      meta: { ...prev.meta, location: val }
+                    }))
+                });
+              }}
+            >
+              {data.meta.location}
+            </span>
           </p>
         </div>
       </footer>

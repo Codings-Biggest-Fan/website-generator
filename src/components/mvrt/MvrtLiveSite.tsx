@@ -260,17 +260,7 @@ export const MvrtLiveSite: React.FC<MvrtLiveSiteProps> = ({
   const [showBulkMembersModal, setShowBulkMembersModal] = useState(false);
   const [bulkMembersDraft, setBulkMembersDraft] = useState('');
 
-  // Interactive Calendar State (Displayed Month + Add/Edit Event Modal)
-  const [calYear, setCalYear] = useState<number>(() => {
-    const firstIso = data.eventsConfig.items.find((e) => e.isoDate)?.isoDate;
-    if (firstIso) return Number(firstIso.slice(0, 4)) || new Date().getFullYear();
-    return new Date().getFullYear();
-  });
-  const [calMonth, setCalMonth] = useState<number>(() => {
-    const firstIso = data.eventsConfig.items.find((e) => e.isoDate)?.isoDate;
-    if (firstIso) return (Number(firstIso.slice(5, 7)) || 1) - 1;
-    return new Date().getMonth();
-  });
+  // Event Add/Edit Modal State (for Home Upcoming Events)
   const [calEventModal, setCalEventModal] = useState<{
     isNew: boolean;
     draft: MvrtEventItem;
@@ -581,11 +571,7 @@ export const MvrtLiveSite: React.FC<MvrtLiveSiteProps> = ({
     isoDate?: string,
     category: MvrtEventItem['category'] = 'team_event'
   ) => {
-    const defaultIso =
-      isoDate ||
-      `${calYear}-${String(calMonth + 1).padStart(2, '0')}-${String(
-        new Date().getDate()
-      ).padStart(2, '0')}`;
+    const defaultIso = isoDate || new Date().toISOString().slice(0, 10);
     setCalEventModal({
       isNew: true,
       draft: {
@@ -626,50 +612,6 @@ export const MvrtLiveSite: React.FC<MvrtLiveSiteProps> = ({
     }));
     setCalEventModal(null);
   };
-
-  // Build 42-day (6-week) calendar grid cells for (calYear, calMonth)
-  const calendarGridCells = useMemo(() => {
-    const firstOfMonth = new Date(calYear, calMonth, 1);
-    const startWeekday = firstOfMonth.getDay(); // 0 = Sun
-    const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
-    const prevMonthDays = new Date(calYear, calMonth, 0).getDate();
-
-    const cells: Array<{
-      iso: string;
-      dayNum: number;
-      isOutside: boolean;
-      events: MvrtEventItem[];
-    }> = [];
-
-    const pad = (n: number) => String(n).padStart(2, '0');
-    const makeIso = (yr: number, mo: number, dy: number) => {
-      const dt = new Date(yr, mo, dy);
-      return `${dt.getFullYear()}-${pad(dt.getMonth() + 1)}-${pad(dt.getDate())}`;
-    };
-
-    const matchEventsForIso = (iso: string) =>
-      data.eventsConfig.items.filter((ev) => {
-        if (!ev.isoDate) return false;
-        const end = ev.endDate && ev.endDate >= ev.isoDate ? ev.endDate : ev.isoDate;
-        return iso >= ev.isoDate && iso <= end;
-      });
-
-    for (let i = startWeekday - 1; i >= 0; i--) {
-      const d = prevMonthDays - i;
-      const iso = makeIso(calYear, calMonth - 1, d);
-      cells.push({ iso, dayNum: d, isOutside: true, events: matchEventsForIso(iso) });
-    }
-    for (let d = 1; d <= daysInMonth; d++) {
-      const iso = makeIso(calYear, calMonth, d);
-      cells.push({ iso, dayNum: d, isOutside: false, events: matchEventsForIso(iso) });
-    }
-    const remaining = 42 - cells.length;
-    for (let d = 1; d <= remaining; d++) {
-      const iso = makeIso(calYear, calMonth + 1, d);
-      cells.push({ iso, dayNum: d, isOutside: true, events: matchEventsForIso(iso) });
-    }
-    return cells;
-  }, [calYear, calMonth, data.eventsConfig.items]);
 
   const memberCountDisplay = data.glanceStats.autoCountMembers
     ? String(data.members.length)
@@ -4353,48 +4295,28 @@ export const MvrtLiveSite: React.FC<MvrtLiveSiteProps> = ({
               <div className="mvrt-cal-toolbar">
                 <h1 style={{ margin: 0 }}>Calendar</h1>
 
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 10,
-                    flexWrap: 'wrap'
-                  }}
-                >
-                  {showEditOverlays && (
-                    <button
-                      type="button"
-                      className="mvrt-onscreen-pill"
-                      onClick={() => openAddCalendarEvent()}
-                    >
-                      <Plus size={13} />
-                      <span>Add Event to Calendar</span>
-                    </button>
-                  )}
-
-                  {showEditOverlays && (
-                    <button
-                      type="button"
-                      className="mvrt-onscreen-pill"
-                      onClick={() =>
-                        setActiveTextSel({
-                          styleKey: 'calendar-embed-url',
-                          label: 'Google Calendar Embed Iframe URL',
-                          defaultSize: 16,
-                          getText: (d) => d.meta.calendarEmbedUrl,
-                          setText: (val) =>
-                            mutateData((prev) => ({
-                              ...prev,
-                              meta: { ...prev.meta, calendarEmbedUrl: val }
-                            }))
-                        })
-                      }
-                    >
-                      <Link2 size={12} />
-                      <span>Edit Google Calendar URL</span>
-                    </button>
-                  )}
-                </div>
+                {showEditOverlays && (
+                  <button
+                    type="button"
+                    className="mvrt-onscreen-pill"
+                    onClick={() =>
+                      setActiveTextSel({
+                        styleKey: 'calendar-embed-url',
+                        label: 'Google Calendar Embed Iframe URL',
+                        defaultSize: 16,
+                        getText: (d) => d.meta.calendarEmbedUrl,
+                        setText: (val) =>
+                          mutateData((prev) => ({
+                            ...prev,
+                            meta: { ...prev.meta, calendarEmbedUrl: val }
+                          }))
+                      })
+                    }
+                  >
+                    <Link2 size={12} />
+                    <span>Edit Google Calendar URL</span>
+                  </button>
+                )}
               </div>
 
               <hr className="mvrt-content-hr" />
@@ -4408,278 +4330,19 @@ export const MvrtLiveSite: React.FC<MvrtLiveSiteProps> = ({
                 >
                   let us know
                 </button>
-                !{' '}
-                {showEditOverlays
-                  ? 'Click any date cell below to add an event, click an event pill to edit it, or use Sync to Google Calendar on any event.'
-                  : 'Click any event below to add it to your Google Calendar, or browse the embedded team calendar.'}
+                ! The calendar is best viewed on a computer.
               </p>
 
-              <div>
-                  {/* Month Navigation Bar */}
-                  <div className="mvrt-cal-month-bar">
-                    <div className="mvrt-cal-nav-group">
-                      <button
-                        type="button"
-                        className="mvrt-cal-nav-btn"
-                        onClick={() => {
-                          if (calMonth === 0) {
-                            setCalMonth(11);
-                            setCalYear((y) => y - 1);
-                          } else {
-                            setCalMonth((m) => m - 1);
-                          }
-                        }}
-                      >
-                        <ChevronLeft size={15} />
-                        <span>Prev</span>
-                      </button>
-                      <button
-                        type="button"
-                        className="mvrt-cal-nav-btn"
-                        onClick={() => {
-                          const now = new Date();
-                          setCalYear(now.getFullYear());
-                          setCalMonth(now.getMonth());
-                        }}
-                      >
-                        Today
-                      </button>
-                      <button
-                        type="button"
-                        className="mvrt-cal-nav-btn"
-                        onClick={() => {
-                          if (calMonth === 11) {
-                            setCalMonth(0);
-                            setCalYear((y) => y + 1);
-                          } else {
-                            setCalMonth((m) => m + 1);
-                          }
-                        }}
-                      >
-                        <span>Next</span>
-                        <ChevronRight size={15} />
-                      </button>
-                    </div>
-
-                    <h2 className="mvrt-cal-month-title">
-                      {new Date(calYear, calMonth, 1).toLocaleString('en-US', {
-                        month: 'long',
-                        year: 'numeric'
-                      })}
-                    </h2>
-
-                    <div className="mvrt-cal-nav-group">
-                      {data.eventsConfig.items
-                        .filter((e) => e.isoDate)
-                        .slice(0, 3)
-                        .map((ev) => (
-                          <button
-                            key={ev.id}
-                            type="button"
-                            className="mvrt-cal-nav-btn"
-                            style={{ fontSize: 12, padding: '5px 10px' }}
-                            onClick={() => {
-                              if (!ev.isoDate) return;
-                              setCalYear(Number(ev.isoDate.slice(0, 4)));
-                              setCalMonth(Number(ev.isoDate.slice(5, 7)) - 1);
-                            }}
-                          >
-                            {ev.title}
-                          </button>
-                        ))}
-                    </div>
-                  </div>
-
-                  {/* 7-Column Monthly Grid */}
-                  <div className="mvrt-cal-grid">
-                    {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(
-                      (day) => (
-                        <div key={day} className="mvrt-cal-weekday">
-                          {day}
-                        </div>
-                      )
-                    )}
-                    {calendarGridCells.map((cell) => {
-                      const todayIso = new Date().toISOString().slice(0, 10);
-                      const isToday = cell.iso === todayIso;
-                      return (
-                        <div
-                          key={cell.iso}
-                          className={`mvrt-cal-day ${
-                            cell.isOutside ? 'is-outside' : ''
-                          } ${isToday ? 'is-today' : ''}`}
-                          onClick={() => {
-                            if (showEditOverlays) {
-                              openAddCalendarEvent(cell.iso, 'team_event');
-                            }
-                          }}
-                        >
-                          <div className="mvrt-cal-day-header">
-                            <span className="mvrt-cal-day-num">
-                              {cell.dayNum}
-                            </span>
-                            {showEditOverlays && (
-                              <span
-                                className="mvrt-cal-day-add-hint"
-                                title={`Add event on ${cell.iso}`}
-                              >
-                                +
-                              </span>
-                            )}
-                          </div>
-                          {cell.events.map((ev) => (
-                            <button
-                              key={ev.id}
-                              type="button"
-                              className={`mvrt-cal-event-pill cat-${ev.category}`}
-                              title={`${ev.title} — ${ev.dateText}${
-                                ev.location ? ` (${ev.location})` : ''
-                              }`}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                if (showEditOverlays) {
-                                  setCalEventModal({
-                                    isNew: false,
-                                    draft: { ...ev }
-                                  });
-                                }
-                              }}
-                            >
-                              {ev.title}
-                            </button>
-                          ))}
-                        </div>
-                      );
-                    })}
-                  </div>
-
-                  {/* Legend */}
-                  <div className="mvrt-cal-legend">
-                    <span className="mvrt-cal-legend-item">
-                      <span
-                        className="mvrt-cal-legend-dot"
-                        style={{ background: '#662d91' }}
-                      />
-                      Team Event / Competition
-                    </span>
-                    <span className="mvrt-cal-legend-item">
-                      <span
-                        className="mvrt-cal-legend-dot"
-                        style={{ background: '#2563eb' }}
-                      />
-                      Team Meeting
-                    </span>
-                    <span className="mvrt-cal-legend-item">
-                      <span
-                        className="mvrt-cal-legend-dot"
-                        style={{ background: '#059669' }}
-                      />
-                      Demo &amp; Outreach
-                    </span>
-                  </div>
-
-                  {/* All Scheduled Events List */}
-                  <div style={{ marginTop: 28 }}>
-                    <h2 style={{ fontSize: 22, marginBottom: 14 }}>
-                      All Scheduled Events ({data.eventsConfig.items.length})
-                    </h2>
-                    <div className="mvrt-events-grid">
-                      {data.eventsConfig.items.map((ev) => (
-                        <div
-                          key={ev.id}
-                          className="mvrt-event-card"
-                          style={{
-                            position: 'relative',
-                            cursor: showEditOverlays ? 'pointer' : 'default',
-                            borderLeftColor:
-                              ev.category === 'team_meeting'
-                                ? '#2563eb'
-                                : ev.category === 'demo_outreach'
-                                  ? '#059669'
-                                  : '#662d91'
-                          }}
-                          onClick={() => {
-                            if (showEditOverlays) {
-                              setCalEventModal({
-                                isNew: false,
-                                draft: { ...ev }
-                              });
-                            }
-                          }}
-                        >
-                          {showEditOverlays && (
-                            <button
-                              type="button"
-                              className="mvrt-onscreen-pill danger"
-                              style={{ position: 'absolute', top: 8, right: 8 }}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                mutateData((prev) => ({
-                                  ...prev,
-                                  eventsConfig: {
-                                    ...prev.eventsConfig,
-                                    items: prev.eventsConfig.items.filter(
-                                      (x) => x.id !== ev.id
-                                    )
-                                  }
-                                }));
-                              }}
-                            >
-                              <Trash2 size={11} />
-                            </button>
-                          )}
-                          <h1 className="mvrt-event-big">{ev.title}</h1>
-                          <h4>{ev.dateText}</h4>
-                          {ev.location && (
-                            <p
-                              style={{
-                                margin: '6px 0 0',
-                                fontSize: 14,
-                                color: '#666'
-                              }}
-                            >
-                              {ev.location}
-                            </p>
-                          )}
-                          <div style={{ marginTop: 10 }}>
-                            <a
-                              href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
-                                ev.title
-                              )}${
-                                ev.isoDate
-                                  ? `&dates=${ev.isoDate.replace(/-/g, '')}/${ev.isoDate.replace(/-/g, '')}`
-                                  : ''
-                              }&details=${encodeURIComponent(
-                                ev.dateText || ''
-                              )}&location=${encodeURIComponent(ev.location || '')}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="mvrt-link-inline"
-                              style={{ fontSize: 12 }}
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              Sync to Google Calendar
-                            </a>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-              {/* Embedded Google Calendar Iframe (always shown below interactive grid) */}
-              <div style={{ marginTop: 36 }}>
-                <h2 style={{ marginBottom: 12 }}>Google Calendar</h2>
-                <div className="mvrt-calendar-aspect aspect4by3 calendar-embed-wrapper">
-                  <iframe
-                    src={data.meta.calendarEmbedUrl}
-                    width="100%"
-                    height="650"
-                    frameBorder="0"
-                    scrolling="no"
-                    title="Monta Vista Robotics Team 115 Google Calendar"
-                  />
-                </div>
+              {/* Embedded Google Calendar Iframe */}
+              <div className="mvrt-calendar-aspect aspect4by3 calendar-embed-wrapper">
+                <iframe
+                  src={data.meta.calendarEmbedUrl}
+                  width="100%"
+                  height="650"
+                  frameBorder="0"
+                  scrolling="no"
+                  title="Monta Vista Robotics Team 115 Google Calendar"
+                />
               </div>
             </div>
           </div>

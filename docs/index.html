@@ -3,24 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MVRT Website Generator — Desktop Editor &amp; Static Site Tool</title>
+  <title>MVRT Website Generator</title>
   <meta name="description" content="Desktop tool for editing mvrt.com content, managing events and assets, and publishing static builds to GitHub." />
+  <link rel="icon" href="./assets/bull_white.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #0c0a10;
-      --surface: #14111b;
-      --surface-2: #1c1826;
-      --border: rgba(255, 255, 255, 0.09);
-      --border-strong: rgba(255, 255, 255, 0.16);
-      --text: #f3f1f7;
-      --text-muted: #a69fb5;
-      --accent: #8b5cf6;
-      --accent-hover: #7c3aed;
-      --accent-soft: rgba(139, 92, 246, 0.14);
-      --radius: 12px;
+      --bg: #ffffff;
+      --surface: #f7f5fb;
+      --surface-card: #ffffff;
+      --border: #e5dfef;
+      --border-strong: #cfc4e3;
+      --text: #3b4045;
+      --text-strong: #1e2124;
+      --text-muted: #5f656d;
+      --mvrt-purple: #662d91;
+      --mvrt-purple-hover: #4f2272;
+      --mvrt-lavender: #deddff;
+      --radius: 8px;
     }
 
     * {
@@ -30,11 +32,16 @@
     }
 
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: var(--bg);
+      font-family: 'Josefin Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg);
       color: var(--text);
       line-height: 1.6;
+      font-size: 17px;
       -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3, .btn-primary, .btn-secondary, .dl-btn, .nav-link, .brand {
+      font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
     a {
@@ -48,18 +55,17 @@
       padding: 0 24px;
     }
 
-    /* Header */
+    /* Header matching mvrt.com light navbar */
     header {
+      background: #ffffff;
       border-bottom: 1px solid var(--border);
-      background: rgba(12, 10, 16, 0.85);
-      backdrop-filter: blur(12px);
       position: sticky;
       top: 0;
       z-index: 40;
     }
 
     .nav-inner {
-      height: 64px;
+      height: 70px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -69,76 +75,99 @@
     .brand {
       display: flex;
       align-items: center;
-      gap: 10px;
-      font-weight: 600;
-      font-size: 15px;
-      letter-spacing: -0.01em;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: 0.02em;
+      color: var(--mvrt-purple);
     }
 
-    .brand-mark {
-      width: 28px;
-      height: 28px;
-      border-radius: 7px;
-      background: var(--accent-soft);
-      border: 1px solid rgba(139, 92, 246, 0.35);
-      display: grid;
-      place-items: center;
-      color: #c4b5fd;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
+    .brand-bull {
+      width: 36px;
+      height: 36px;
+      border-radius: 6px;
+      background: var(--mvrt-purple);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px;
+      flex-shrink: 0;
+    }
+
+    .brand-bull img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .brand-sub {
+      color: var(--text-strong);
       font-weight: 600;
     }
 
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     .nav-link {
       display: inline-flex;
       align-items: center;
       gap: 7px;
-      padding: 7px 13px;
-      border-radius: 8px;
+      padding: 8px 14px;
+      border-radius: 6px;
       font-size: 13px;
-      font-weight: 500;
-      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text);
       border: 1px solid transparent;
       transition: background 0.15s, color 0.15s, border-color 0.15s;
     }
 
     .nav-link:hover {
-      color: var(--text);
+      color: var(--mvrt-purple);
       background: var(--surface);
       border-color: var(--border);
     }
 
-    /* Hero / Tool Summary */
+    /* Hero Section */
     .hero {
-      padding: 64px 0 48px;
+      padding: 56px 0 52px;
+      background: linear-gradient(180deg, #ffffff 0%, #f9f7fc 100%);
     }
 
     .hero-grid {
       display: grid;
       grid-template-columns: 1fr 1.25fr;
-      gap: 40px;
+      gap: 44px;
       align-items: center;
     }
 
     .hero h1 {
-      font-size: clamp(28px, 3.6vw, 40px);
+      font-size: clamp(28px, 3.4vw, 38px);
       font-weight: 700;
-      letter-spacing: -0.025em;
-      line-height: 1.15;
-      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+      line-height: 1.18;
+      color: var(--text-strong);
+      margin-bottom: 14px;
+    }
+
+    .mvrt-rule {
+      width: 64px;
+      height: 3px;
+      background: var(--mvrt-purple);
+      border: none;
+      margin-bottom: 18px;
     }
 
     .hero p {
       color: var(--text-muted);
-      font-size: 15px;
-      margin-bottom: 24px;
-      max-width: 480px;
+      font-size: 18px;
+      margin-bottom: 26px;
+      max-width: 490px;
     }
 
     .hero-actions {
@@ -152,55 +181,60 @@
       display: inline-flex;
       align-items: center;
       gap: 9px;
-      background: var(--accent);
+      background: var(--mvrt-purple);
       color: #ffffff;
-      padding: 11px 20px;
-      border-radius: 9px;
-      font-size: 14px;
+      padding: 12px 22px;
+      border-radius: 6px;
+      font-size: 13px;
       font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
       transition: background 0.15s;
     }
 
     .btn-primary:hover {
-      background: var(--accent-hover);
+      background: var(--mvrt-purple-hover);
     }
 
     .btn-secondary {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: var(--surface);
-      color: var(--text);
-      padding: 11px 16px;
-      border-radius: 9px;
-      font-size: 14px;
-      font-weight: 500;
-      border: 1px solid var(--border-strong);
-      transition: background 0.15s, border-color 0.15s;
+      background: #ffffff;
+      color: var(--mvrt-purple);
+      padding: 11px 18px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      border: 1.5px solid var(--mvrt-purple);
+      transition: background 0.15s, color 0.15s;
     }
 
     .btn-secondary:hover {
-      background: var(--surface-2);
+      background: var(--surface);
     }
 
     .screenshot-frame {
-      background: var(--surface);
+      background: #ffffff;
       border: 1px solid var(--border-strong);
       border-radius: var(--radius);
       overflow: hidden;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+      box-shadow: 0 12px 32px rgba(102, 45, 145, 0.1);
     }
 
     .screenshot-bar {
       height: 30px;
-      background: var(--surface-2);
+      background: var(--surface);
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
       padding: 0 12px;
       gap: 6px;
+      font-family: 'Montserrat', sans-serif;
       font-size: 11px;
-      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
       color: var(--text-muted);
     }
 
@@ -208,7 +242,7 @@
       width: 9px;
       height: 9px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.16);
+      background: var(--border-strong);
     }
 
     .screenshot-frame img {
@@ -217,10 +251,14 @@
       height: auto;
     }
 
-    /* Section Headings */
+    /* Sections */
     section {
-      padding: 48px 0;
+      padding: 52px 0;
       border-top: 1px solid var(--border);
+    }
+
+    .section-tinted {
+      background: var(--surface);
     }
 
     .section-head {
@@ -229,33 +267,34 @@
 
     .section-head h2 {
       font-size: 22px;
-      font-weight: 600;
-      letter-spacing: -0.015em;
-      margin-bottom: 6px;
+      font-weight: 700;
+      color: var(--text-strong);
+      margin-bottom: 8px;
     }
 
     .section-head p {
       color: var(--text-muted);
-      font-size: 14px;
-      max-width: 640px;
+      font-size: 17px;
+      max-width: 660px;
     }
 
     /* Downloads Grid */
     .downloads-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
+      gap: 18px;
     }
 
     .dl-card {
-      background: var(--surface);
+      background: var(--surface-card);
       border: 1px solid var(--border);
+      border-top: 3px solid var(--mvrt-purple);
       border-radius: var(--radius);
-      padding: 20px;
+      padding: 22px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      gap: 16px;
+      gap: 18px;
     }
 
     .dl-card-top {
@@ -266,23 +305,26 @@
     }
 
     .dl-os {
+      font-family: 'Montserrat', sans-serif;
       font-size: 16px;
-      font-weight: 600;
+      font-weight: 700;
+      color: var(--text-strong);
     }
 
     .dl-ext {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      color: var(--text-muted);
-      background: var(--surface-2);
-      padding: 3px 8px;
-      border-radius: 6px;
-      border: 1px solid var(--border);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--mvrt-purple);
+      background: var(--mvrt-lavender);
+      padding: 3px 9px;
+      border-radius: 4px;
     }
 
     .dl-desc {
-      font-size: 13px;
+      font-size: 16px;
       color: var(--text-muted);
+      margin-top: 8px;
     }
 
     .dl-btn {
@@ -290,19 +332,19 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      padding: 9px 14px;
-      border-radius: 8px;
-      background: var(--surface-2);
-      border: 1px solid var(--border-strong);
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text);
-      transition: background 0.15s, border-color 0.15s;
+      padding: 10px 14px;
+      border-radius: 6px;
+      background: var(--mvrt-purple);
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #ffffff;
+      transition: background 0.15s;
     }
 
     .dl-btn:hover {
-      background: rgba(139, 92, 246, 0.16);
-      border-color: rgba(139, 92, 246, 0.45);
+      background: var(--mvrt-purple-hover);
     }
 
     /* Walkthrough Screenshots */
@@ -313,7 +355,7 @@
     }
 
     .walkthrough-card {
-      background: var(--surface);
+      background: var(--surface-card);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       overflow: hidden;
@@ -329,26 +371,27 @@
     }
 
     .walkthrough-body {
-      padding: 18px 20px;
+      padding: 20px 22px;
     }
 
     .walkthrough-body h3 {
       font-size: 15px;
-      font-weight: 600;
-      margin-bottom: 6px;
+      font-weight: 700;
+      color: var(--mvrt-purple);
+      margin-bottom: 8px;
     }
 
     .walkthrough-body p {
-      font-size: 13.5px;
+      font-size: 16px;
       color: var(--text-muted);
     }
 
-    /* Footer */
+    /* Footer matching mvrt.com solid purple footer */
     footer {
-      border-top: 1px solid var(--border);
+      background: var(--mvrt-purple);
+      color: #ffffff;
       padding: 28px 0;
-      color: var(--text-muted);
-      font-size: 13px;
+      font-size: 15px;
     }
 
     .footer-inner {
@@ -356,16 +399,42 @@
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 14px;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.02em;
+    }
+
+    .footer-brand img {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
     }
 
     .footer-links {
       display: flex;
-      gap: 18px;
+      gap: 20px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .footer-links a {
+      color: rgba(255, 255, 255, 0.88);
     }
 
     .footer-links a:hover {
-      color: var(--text);
+      color: #ffffff;
+      text-decoration: underline;
     }
 
     @media (max-width: 880px) {
@@ -381,8 +450,10 @@
   <header>
     <div class="container nav-inner">
       <a href="#" class="brand">
-        <span class="brand-mark">115</span>
-        <span>MVRT Website Generator</span>
+        <span class="brand-bull">
+          <img src="./assets/bull_white.png" alt="MVRT Bull Logo" />
+        </span>
+        <span>MVRT <span class="brand-sub">Website Generator</span></span>
       </a>
       <nav class="nav-links" aria-label="Primary">
         <a
@@ -391,7 +462,7 @@
           target="_blank"
           rel="noopener noreferrer"
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
           </svg>
           <span>Source</span>
@@ -402,7 +473,7 @@
           target="_blank"
           rel="noopener noreferrer"
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
           </svg>
           <span>Releases</span>
@@ -416,8 +487,9 @@
       <div class="container hero-grid">
         <div>
           <h1>MVRT Website Generator</h1>
+          <hr class="mvrt-rule" />
           <p>
-            Desktop application for updating Monta Vista Robotics Team 115 website content. Edit pages, schedules, rosters, robot binders, sponsors, and assets in a live preview, then export a static site bundle or commit directly to GitHub.
+            Desktop application for updating Monta Vista Robotics Team 115 website content. Edit pages, schedules, rosters, robot binders, sponsors, and assets in a live preview, then export a static site bundle or push directly to GitHub.
           </p>
           <div class="hero-actions">
             <a
@@ -440,7 +512,7 @@
               target="_blank"
               rel="noopener noreferrer"
             >
-              View Repository
+              View Source
             </a>
           </div>
         </div>
@@ -460,7 +532,7 @@
       </div>
     </section>
 
-    <section id="downloads">
+    <section id="downloads" class="section-tinted">
       <div class="container">
         <div class="section-head">
           <h2>Installers &amp; Packages</h2>
@@ -476,7 +548,7 @@
                 <span class="dl-os">Windows</span>
                 <span class="dl-ext">.exe</span>
               </div>
-              <p class="dl-desc" style="margin-top: 8px;">
+              <p class="dl-desc">
                 Portable executable and NSIS installer for 64-bit Windows.
               </p>
             </div>
@@ -497,7 +569,7 @@
                 <span class="dl-os">macOS</span>
                 <span class="dl-ext">.dmg</span>
               </div>
-              <p class="dl-desc" style="margin-top: 8px;">
+              <p class="dl-desc">
                 Universal macOS disk image supporting Apple Silicon and Intel.
               </p>
             </div>
@@ -518,7 +590,7 @@
                 <span class="dl-os">Linux</span>
                 <span class="dl-ext">.AppImage / .deb</span>
               </div>
-              <p class="dl-desc" style="margin-top: 8px;">
+              <p class="dl-desc">
                 AppImage and Debian package for 64-bit Linux distributions.
               </p>
             </div>
@@ -578,7 +650,10 @@
 
   <footer>
     <div class="container footer-inner">
-      <span>MVRT Website Generator</span>
+      <div class="footer-brand">
+        <img src="./assets/bull_white.png" alt="MVRT Bull Logo" />
+        <span>MVRT Website Generator</span>
+      </div>
       <div class="footer-links">
         <a href="https://github.com/Codings-Biggest-Fan/website-generator" target="_blank" rel="noopener noreferrer">Source</a>
         <a href="https://github.com/Codings-Biggest-Fan/website-generator/releases" target="_blank" rel="noopener noreferrer">Releases</a>
